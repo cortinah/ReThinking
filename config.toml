@@ -36,7 +36,7 @@ enableEmoji = true
     weight = 2    
     
 [params]
-    description = "R(e)Thinking: ESG + Data Science."
+    description = "R(e)Thinking: ESG, Markets, + Data Science."
     customCSS = ["css/font-awesome.min.css"]
 
     # options for highlight.js (version, additional languages, and theme)
