@@ -10,6 +10,8 @@ tags:
   - Phyllotaxis
 ---
 
+I coded my first R/Shiny app a month ago, but never wrote about it anywhere. Here's the backstory.
+
 # What the heck is phyllotaxis, anyway?
 
 As part of my exploration of the R world I came upon @aschinchon's fantastic [fronkonstin](https://fronkonstin.com/) website. It's a beautiful and creative display of mathematics and art, often pushing the limits of what can be done in a few lines of R [code](https://fronkonstin.com/2017/11/07/drawing-10-million-points-with-ggplot-clifford-attractors/).
