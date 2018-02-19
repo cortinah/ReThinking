@@ -1,4 +1,4 @@
-baseurl = "/"
+baseurl = "https://rethinking.rbind.io/"
 languageCode = "en-us"
 title = "R(e)Thinking"
 theme = "hugo-lithium-theme"
