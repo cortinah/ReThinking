@@ -37,7 +37,7 @@ enableEmoji = true
 [[menu.main]]
     name = "Categories"
       pre = "fa-folder"
-    url = "/Categories/"
+    url = "/categories/"
     weight = 6
     [[menu.main]]
     name = "Tags"
@@ -48,8 +48,13 @@ enableEmoji = true
 [params]
     description = "R(e)Thinking: ESG, Markets, + Data Science."
     customCSS = ["css/font-awesome.min.css", "css/hccustom.css"]
+    
+[taxonomies]
+tag = "tags"
+category = "categories"
+    
 
-    # options for highlight.js (version, additional languages, and theme)
+# options for highlight.js (version, additional languages, and theme)
     highlightjsVersion = "9.11.0"
     highlightjsCDN = "//cdn.bootcss.com"
     highlightjsLang = ["r", "yaml"]
