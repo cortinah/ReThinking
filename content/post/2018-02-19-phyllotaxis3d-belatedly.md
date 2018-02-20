@@ -2,12 +2,13 @@
 title: Phyllotaxis3D, Belatedly
 author: Hernando
 date: '2018-02-19'
-slug: phyllotaxis3d-belatedly
 categories:
   - R
 tags:
-  - Shiny
   - Phyllotaxis
+  - Shiny
+  - Math
+slug: phyllotaxis3d-belatedly
 ---
 
 I coded my first R/Shiny app a month ago, but never wrote about it anywhere. Here's the backstory.

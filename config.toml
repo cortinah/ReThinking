@@ -15,6 +15,11 @@ enableEmoji = true
     url = "/about/"
     weight = 1
 [[menu.main]]
+    name = "Blog"
+    pre = "fa-bar-chart"
+    url = "/post/"
+    weight = 2
+[[menu.main]]
     name = "LinkedIn"
     pre = "fa-linkedin"
     url = "https://www.linkedin.com/in/hernando-cortina-1710061/"
@@ -30,14 +35,19 @@ enableEmoji = true
     url = "https://github.com/cortinah"
     weight = 5
 [[menu.main]]
-    name = "Blog"
-    pre = "fa-bar-chart"
-    url = "/post/"
-    weight = 2    
+    name = "Categories"
+      pre = "fa-folder"
+    url = "/Categories/"
+    weight = 6
+    [[menu.main]]
+    name = "Tags"
+    pre = "fa-tags"
+    url = "/tags/"
+    weight = 7  
     
 [params]
     description = "R(e)Thinking: ESG, Markets, + Data Science."
-    customCSS = ["css/font-awesome.min.css"]
+    customCSS = ["css/font-awesome.min.css", "css/hccustom.css"]
 
     # options for highlight.js (version, additional languages, and theme)
     highlightjsVersion = "9.11.0"
