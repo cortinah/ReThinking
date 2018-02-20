@@ -2,7 +2,7 @@
 
 <h1>{{ .Title }}</h1>
 
-<ul class="terms">
+<ul class="article-content">
   {{ range $key, $value := .Data.Terms }}
   <li>
     <a href="{{ (print "/" $.Data.Plural "/" $key | urlize) | relURL }}">
