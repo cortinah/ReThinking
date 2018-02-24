@@ -12,7 +12,8 @@ tags:
   - Trump
 ---
 
-# *Corporate Regulatory Fines in the First Year of the Trump Administration*
+# Corporate Regulatory Fines in the First Year of the Trump Administration
+
 
 ### We Assess the Monetary Fines and Settlements of Large US Public Corporations During the First Year of the Trump Administration
 
