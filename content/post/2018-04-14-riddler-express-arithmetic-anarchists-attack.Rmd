@@ -1,0 +1,82 @@
+---
+title: 'Riddler Express: Arithmetic Anarchists Attack'
+author: Hernando Cortina
+date: '2018-04-14'
+categories:
+  - R
+tags:
+  - Riddler
+slug: riddler-express-arithmetic-anarchists-attack
+---
+
+
+## *On the April 6, 2018 FiveThirtyEight Riddler Express*
+
+[The Riddler](https://fivethirtyeight.com/tag/the-riddler/) is the excellent math and logic puzzle weekly by Oliver Roeder. Puzzles are posted every friday, together with the solutions to the previous week's puzzles.  I ocasionally submit proposed solutions, using R whenever possible.  Yesterday Ollie was kind enough to give me a [shout out](https://fivethirtyeight.com/features/can-you-find-the-perfect-poker-hand-can-you-shut-this-infernal-box/) for the ggplot chart that I provided together with my solution to the previous week's [Riddler Express](https://fivethirtyeight.com/features/when-will-the-arithmetic-anarchists-attack/). This is a brief post going over my submission code, please refer to Ollie's post for the puzzle description. The puzzle can be solved with just 16 lines of R code. 
+
+
+## R Code to Evaluate All 21st Century Dates
+
+```{r century, message=FALSE}
+library(zoo); library(tidyverse)
+
+mydate <- as.Date('2001-01-01')
+i <- 1; results <- matrix(nrow=212,ncol=3)
+repeat {
+mymonth <- as.numeric(format(mydate,'%m'))
+myday <- as.numeric(format(mydate,'%d'))
+myyear <- as.numeric(format(mydate,'%y'))
+
+if (mymonth*myday == myyear) {results[i,1] <- as.Date(mydate); i<-i+1}
+
+mydate <- mydate+1
+if (mydate==as.Date('2100-01-01')) break
+}
+# Get year of each attack
+results[,2] <- as.numeric(format(as.Date(results[,1]),'%Y'))
+
+# Get gaps between dates
+results[2:212,3] <- diff(results[,1])
+```
+
+
+### How Many Attacks Will Happen?
+nrow(results): `r nrow(results)`
+
+### What Year Will Have the Most Vandalism?
+names(sort(table(results[2:212,2]), decreasing = T)[1]): `r names(sort(table(results[2:212,2]), decreasing = T)[1])`
+
+How Many?
+sort(table(results[2:212,2]), decreasing = T)[1]: `r sort(table(results[2:212,2]), decreasing = T)[1]`
+
+### What Year Will the Least Vandalism? Multiple Years Have No Attacks, See Chart Below
+
+### What is the Longest Gap Between Attacks?
+max(results[2:212,3]): `r max(results[2:212,3])` days
+
+### What is the Shortest Gap Between Attacks?
+min(results[2:212,3]): `r min(results[2:212,3])` days
+
+## Plot Results
+```{r results, message=FALSE}
+res <- as.data.frame(results)
+colnames(res) <- c('date','Year','Count')
+res <- res %>% group_by(Year) %>% summarize(Count=n())
+bc <- data.frame(Year=2001:2099)
+bc <- left_join(bc,res)
+bc[is.na(bc$Count),'Count']<-0
+bc$Count<-as.factor(bc$Count)
+
+ggplot(bc,aes(x=Year,y=Count)) +geom_col(aes(fill=Count)) +theme_classic() +scale_fill_brewer(palette = 'Set1') +
+  ggtitle('Anarchist Attacks by Year',subtitle = '212 Anarchist Attacks in Century')
+```
+
+@Cardlinger commented on the fact that the y axis seems to start at a negative value.  This allows for "zeros" on the chart to be clearly distinguished. Otherwise, with 99 bars, the small gaps between gaps caused by zeros would be difficult to identify.
+
+{{< tweet 984798381154406401 >}}
+
+
+### [Thanks, Ollie!](https://fivethirtyeight.com/features/can-you-find-the-perfect-poker-hand-can-you-shut-this-infernal-box/)
+<img src="/images/AnarchistAttacks/Ollie.png" style="display: block; margin: auto;" />
+
+

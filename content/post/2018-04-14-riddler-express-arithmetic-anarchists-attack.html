@@ -1,0 +1,79 @@
+---
+title: 'Riddler Express: Arithmetic Anarchists Attack'
+author: Hernando Cortina
+date: '2018-04-14'
+categories:
+  - R
+tags:
+  - Riddler
+slug: riddler-express-arithmetic-anarchists-attack
+---
+
+
+
+<div id="on-the-april-6-2018-fivethirtyeight-riddler-express" class="section level2">
+<h2><em>On the April 6, 2018 FiveThirtyEight Riddler Express</em></h2>
+<p><a href="https://fivethirtyeight.com/tag/the-riddler/">The Riddler</a> is the excellent math and logic puzzle weekly by Oliver Roeder. Puzzles are posted every friday, together with the solutions to the previous week’s puzzles. I ocasionally submit proposed solutions, using R whenever possible. Yesterday Ollie was kind enough to give me a <a href="https://fivethirtyeight.com/features/can-you-find-the-perfect-poker-hand-can-you-shut-this-infernal-box/">shout out</a> for the ggplot chart that I provided together with my solution to the previous week’s <a href="https://fivethirtyeight.com/features/when-will-the-arithmetic-anarchists-attack/">Riddler Express</a>. This is a brief post going over my submission code, please refer to Ollie’s post for the puzzle description. The puzzle can be solved with just 16 lines of R code.</p>
+</div>
+<div id="r-code-to-evaluate-all-21st-century-dates" class="section level2">
+<h2>R Code to Evaluate All 21st Century Dates</h2>
+<pre class="r"><code>library(zoo); library(tidyverse)
+
+mydate &lt;- as.Date(&#39;2001-01-01&#39;)
+i &lt;- 1; results &lt;- matrix(nrow=212,ncol=3)
+repeat {
+mymonth &lt;- as.numeric(format(mydate,&#39;%m&#39;))
+myday &lt;- as.numeric(format(mydate,&#39;%d&#39;))
+myyear &lt;- as.numeric(format(mydate,&#39;%y&#39;))
+
+if (mymonth*myday == myyear) {results[i,1] &lt;- as.Date(mydate); i&lt;-i+1}
+
+mydate &lt;- mydate+1
+if (mydate==as.Date(&#39;2100-01-01&#39;)) break
+}
+# Get year of each attack
+results[,2] &lt;- as.numeric(format(as.Date(results[,1]),&#39;%Y&#39;))
+
+# Get gaps between dates
+results[2:212,3] &lt;- diff(results[,1])</code></pre>
+<div id="how-many-attacks-will-happen" class="section level3">
+<h3>How Many Attacks Will Happen?</h3>
+<p>nrow(results): 212</p>
+</div>
+<div id="what-year-will-have-the-most-vandalism" class="section level3">
+<h3>What Year Will Have the Most Vandalism?</h3>
+<p>names(sort(table(results[2:212,2]), decreasing = T)[1]): 2024</p>
+<p>How Many? sort(table(results[2:212,2]), decreasing = T)[1]: 7</p>
+</div>
+<div id="what-year-will-the-least-vandalism-multiple-years-have-no-attacks-see-chart-below" class="section level3">
+<h3>What Year Will the Least Vandalism? Multiple Years Have No Attacks, See Chart Below</h3>
+</div>
+<div id="what-is-the-longest-gap-between-attacks" class="section level3">
+<h3>What is the Longest Gap Between Attacks?</h3>
+<p>max(results[2:212,3]): 1097 days</p>
+</div>
+<div id="what-is-the-shortest-gap-between-attacks" class="section level3">
+<h3>What is the Shortest Gap Between Attacks?</h3>
+<p>min(results[2:212,3]): 16 days</p>
+</div>
+</div>
+<div id="plot-results" class="section level2">
+<h2>Plot Results</h2>
+<pre class="r"><code>res &lt;- as.data.frame(results)
+colnames(res) &lt;- c(&#39;date&#39;,&#39;Year&#39;,&#39;Count&#39;)
+res &lt;- res %&gt;% group_by(Year) %&gt;% summarize(Count=n())
+bc &lt;- data.frame(Year=2001:2099)
+bc &lt;- left_join(bc,res)
+bc[is.na(bc$Count),&#39;Count&#39;]&lt;-0
+bc$Count&lt;-as.factor(bc$Count)
+
+ggplot(bc,aes(x=Year,y=Count)) +geom_col(aes(fill=Count)) +theme_classic() +scale_fill_brewer(palette = &#39;Set1&#39;) +
+  ggtitle(&#39;Anarchist Attacks by Year&#39;,subtitle = &#39;212 Anarchist Attacks in Century&#39;)</code></pre>
+<p><img src="/post/2018-04-14-riddler-express-arithmetic-anarchists-attack_files/figure-html/results-1.png" width="672" /></p>
+<p><span class="citation">@Cardlinger</span> commented on the fact that the y axis seems to start at a negative value. This allows for “zeros” on the chart to be clearly distinguished. Otherwise, with 99 bars, the small gaps between gaps caused by zeros would be difficult to identify.</p>
+<p>{{&lt; tweet 984798381154406401 &gt;}}</p>
+<div id="thanks-ollie" class="section level3">
+<h3><a href="https://fivethirtyeight.com/features/can-you-find-the-perfect-poker-hand-can-you-shut-this-infernal-box/">Thanks, Ollie!</a></h3>
+<p><img src="/images/AnarchistAttacks/Ollie.png" style="display: block; margin: auto;" /></p>
+</div>
+</div>

@@ -49,10 +49,6 @@ enableEmoji = true
     description = "R(e)Thinking: ESG, Markets, + Data Science."
     customCSS = ["css/font-awesome.min.css", "css/hccustom.css"]
     
-[taxonomies]
-tag = "tags"
-category = "categories"
-    
 
 # options for highlight.js (version, additional languages, and theme)
     highlightjsVersion = "9.11.0"
@@ -69,3 +65,6 @@ category = "categories"
     height = 50
     alt = "Logo"
 
+[taxonomies]
+tag = "tags"
+category = "categories"
