@@ -71,12 +71,14 @@ ggplot(bc,aes(x=Year,y=Count)) +geom_col(aes(fill=Count)) +theme_classic() +scal
   ggtitle('Anarchist Attacks by Year',subtitle = '212 Anarchist Attacks in Century')
 ```
 
-@Cardlinger commented on the fact that the y axis seems to start at a negative value.  This allows for "zeros" on the chart to be clearly distinguished. Otherwise, with 99 bars, the small gaps between gaps caused by zeros would be difficult to identify.
+Twitter user @Cardlinger commented on the fact that the y axis seems to start at a negative value.  This allows for "zeros" on the chart to be clearly distinguished. Otherwise, with 99 bars, the small gaps between gaps caused by zeros would be difficult to identify.
 
-{{< tweet 984798381154406401 >}}
 
+`r blogdown::shortcode("tweet", "984800244037771270")`
+`r blogdown::shortcode("tweet", "984800435973312513")`
 
 ### [Thanks, Ollie!](https://fivethirtyeight.com/features/can-you-find-the-perfect-poker-hand-can-you-shut-this-infernal-box/)
+
 <img src="/images/AnarchistAttacks/Ollie.png" style="display: block; margin: auto;" />
 
 
