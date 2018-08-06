@@ -1,0 +1,123 @@
+---
+title: 'Riddler Classic: The Perfect Doodle Puzzle'
+author: Hernando Cortina
+date: '2018-08-05'
+slug: riddler-classic-the-perfect-doodle-puzzle
+categories:
+  - R
+tags:
+  - Riddler
+---
+
+
+
+<div id="apologia" class="section level2">
+<h2>Apologia</h2>
+<p>It’s been quite a while since my last post and I regret that. I’ve been rather busy, mainly with <a href="https://justcapital.com/reports/introducing-the-just-etf/">this</a>. Now that’s <a href="https://www.gsam.com/content/gsam/us/en/individual/products/etf-fund-finder/goldman-sachs-just-u-s--large-cap-equity-etf.html">succesfully</a> out of the way I have a little more time to write a few words and post a little R code here. Despite the lack of blogging, I always seem to find the time for a little FiveThirtyEight <a href="https://fivethirtyeight.com/tag/the-riddler/">Riddler</a> puzzle. I was thrilled when a few weeks ago Riddler editor Oliver Roeder thought my simulation of dystopic <a href="https://fivethirtyeight.com/features/when-will-your-house-collapse-should-you-take-a-construction-contract/">row house collapse times</a> was <a href="https://fivethirtyeight.com/features/the-case-of-the-smudged-secret-message/">beautiful</a>. Here’s the viz:</p>
+{{% tweet "1003654868807110657" %}}
+<p>Seldom do people use that precise word regarding the finance-oriented kind of charts I usually make, and it was gratifying to hear that since I did focus on the aesthetics of that visualization. On this post I write about a more recent Riddler puzzle, this one is a little more code heavy, but I did manage to slip in a little <a href="http://colorbrewer2.org">colorbrewer</a> for a splash of color in the final result.</p>
+</div>
+<div id="on-the-july-27-2018-fivethirtyeight-riddler-classic" class="section level2">
+<h2><em>On the July 27, 2018 FiveThirtyEight Riddler Classic</em></h2>
+<p>This <a href="https://fivethirtyeight.com/features/the-perfect-doodle-puzzle-to-keep-you-busy-during-boring-meetings">Riddler Classic</a>, was about filling a 5x5 grid with all numbers from 1 to 25, subject to the provisos that from your chosen starting cell you may: 1) move exactly 3 cells horizontally or vertically, or exactly 2 cells diagonally; 2) you are not allowed to visit any cell twice; and 3) you may not step outside the grid. You win if you fill in all the cells.</p>
+<p>My solution was based on selecting an initial cell at random, checking which of the eight possible moves are valid, and randomly selecting among those. This process is repeated until there are no more valid moves and the player has lost the game, or until all cells have been selected once and the player has won the game. The R code below is broken into three functions that perform the checking for valid moves, returning the next position, and updating and checking the state of the board. The search() function then repeats this process until a solution is found. Thanks for reading and please reach out with any comments.</p>
+<div id="function-to-check-valid-moves-given-the-state-of-the-board-and-current-position" class="section level3">
+<h3>Function to check valid moves given the state of the board and current position</h3>
+<pre class="r"><code>moves &lt;- function(board, pos) {
+  pos_moves &lt;- rep(FALSE,8)
+  names(pos_moves) &lt;- 1:8
+  
+  if ((pos[1]+3) &lt; 6) (if (board[ pos[1]+3,pos[2] ]==F) pos_moves[1] &lt;- T)
+  if ((pos[1]-3) &gt; 0) (if (board[ pos[1]-3,pos[2] ]==F) pos_moves[2] &lt;- T)
+  if ((pos[2]+3) &lt; 6) (if (board[ pos[1],pos[2]+3 ]==F) pos_moves[3] &lt;- T)
+  if ((pos[2]-3) &gt; 0) (if (board[ pos[1],pos[2]-3 ]==F) pos_moves[4] &lt;- T)
+  if ((pos[1]+2) &lt; 6  &amp; (pos[2]+2) &lt; 6) (if (board[ pos[1]+2,pos[2]+2 ]==F) pos_moves[5] &lt;- T)
+  if ((pos[1]+2) &lt; 6  &amp; (pos[2]-2) &gt; 0) (if (board[ pos[1]+2,pos[2]-2 ]==F) pos_moves[6] &lt;- T)
+  if ((pos[1]-2) &gt; 0  &amp; (pos[2]-2) &gt; 0) (if (board[ pos[1]-2,pos[2]-2 ]==F) pos_moves[7] &lt;- T)
+  if ((pos[1]-2) &gt; 0  &amp; (pos[2]+2) &lt; 6) (if (board[ pos[1]-2,pos[2]+2 ]==F) pos_moves[8] &lt;- T)
+    
+  pos_moves
+}</code></pre>
+</div>
+<div id="function-that-returns-next-position-given-current-position-and-selected-move" class="section level3">
+<h3>Function that returns next position given current position and selected move</h3>
+<pre class="r"><code>next_pos &lt;- function(pos, path) {
+  
+  pos &lt;- switch(path, c(pos[1]+3, pos[2]), c(pos[1]-3, pos[2]),
+                c(pos[1], pos[2]+3), c(pos[1],pos[2]-3),
+                c(pos[1]+2,pos[2]+2), c(pos[1]+2,pos[2]-2),
+                c(pos[1]-2,pos[2]-2), c(pos[1]-2,pos[2]+2) )
+  pos
+         }</code></pre>
+</div>
+<div id="main-game-function" class="section level3">
+<h3>Main game function</h3>
+<pre class="r"><code>game &lt;- function() {
+  
+# Set-up board and initial location
+board &lt;- matrix(F,ncol=5,nrow=5)
+current &lt;- sample(1:5,2,replace=T)
+
+board[current[1],current[2]] &lt;- T
+i &lt;- 1
+pos_hist &lt;- vector(&quot;list&quot;, 25)
+pos_hist[[i]] &lt;- current
+
+repeat {
+  possible &lt;- moves(board, current)
+  if (all(possible==F)) {ret &lt;- 1; break}
+  possible &lt;- possible[possible==T]
+  path &lt;- sample(possible,1)
+  current &lt;- next_pos(current, as.numeric(names(path)))
+  board[current[1],current[2]] &lt;- T
+  i &lt;- i+1
+  pos_hist[[i]] &lt;- current
+  if (all(board==T)) {ret &lt;- 0; break}
+}
+
+return(list(ret,pos_hist))
+}</code></pre>
+</div>
+<div id="keep-searching-until-a-solution-is-found" class="section level3">
+<h3>Keep searching until a solution is found</h3>
+<pre class="r"><code>search &lt;- function(){
+  
+  repeat{
+    t &lt;- game()
+    if (t[[1]]==0) break }
+  t[[2]]
+}</code></pre>
+</div>
+<div id="solve-and-plot" class="section level3">
+<h3>Solve and plot</h3>
+<pre class="r"><code>library(ggplot2)
+t &lt;- search()
+
+path &lt;- as.data.frame(matrix(unlist(t), ncol=2, byrow = T))
+path$step&lt;-1:25
+colnames(path)[1]&lt;-&#39;x&#39;
+colnames(path)[2]&lt;-&#39;y&#39;
+
+ggplot(path,aes(x,y,fill=step)) +geom_tile() +scale_fill_distiller(direction = 1) +
+    geom_text(aes(label=step),size=8,color=&#39;red&#39;,fontface=&#39;bold&#39;) +theme_void() +
+    theme(legend.position=&#39;none&#39;) +labs(title=&#39;538 Riddler Classic: The Perfect Doodle Puzzle&#39;,
+    subtitle=&#39;July 27, 2018&#39;,caption=&#39;By: @cortinah&#39;) +coord_fixed()</code></pre>
+<p><img src="/post/2018-08-05-riddler-classic-the-perfect-doodle-puzzle_files/figure-html/plot-1.png" width="672" /></p>
+</div>
+</div>
+<div id="section" class="section level2">
+<h2></h2>
+<p>I was fortunate to once again, together with <a href="http://lukebenz.com">Luke Benz</a>, receive a <a href="https://fivethirtyeight.com/features/the-eternal-question-how-much-do-these-apricots-weigh/">mention</a> by Ollie last week.</p>
+<div id="thanks-again-ollie-p.s.-that-wasnt-a-work-meeting-of-course" class="section level3">
+<h3><a href="https://fivethirtyeight.com/features/the-eternal-question-how-much-do-these-apricots-weigh/">Thanks again, Ollie!</a> P.S.: That wasn’t a work meeting of course…</h3>
+<div class="figure">
+<img src="/post/2018-08-05-riddler-classic-the-perfect-doodle-puzzle_files/doodle.png" alt="Ollie’s Shout Out" style="width:60.0%" />
+<p class="caption">Ollie’s Shout Out</p>
+</div>
+</div>
+</div>
+<div id="epilogue" class="section level2">
+<h2>Epilogue</h2>
+<p>Luke Benz clearly loves a good puzzle and I noticed he <a href="https://twitter.com/recspecs730/status/1025379762397749248">posted</a> a series of solutions not just for the 5x5 puzzle, but also for the 6x6, 7x7, and 8x8 versions. In the spirit of friendly competition I took a shot at the 9x9 variation. All that is required in the above code is to change the board matrix ncol and nrow to be 9x9, change the bounds checks in moves() to be 10 rather than 6, and change the size of the pos_hist list to 81. Of course, the complexity of the solution increases quadratically with the grid’s length. The code took a little while to find a solution, but when I got back from lunch, there it was. Much rejoicing ensued.</p>
+{{% tweet "1025449775804637185" %}}
+</div>
