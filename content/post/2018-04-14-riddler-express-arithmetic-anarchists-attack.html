@@ -13,7 +13,7 @@ slug: riddler-express-arithmetic-anarchists-attack
 
 <div id="on-the-april-6-2018-fivethirtyeight-riddler-express" class="section level2">
 <h2><em>On the April 6, 2018 FiveThirtyEight Riddler Express</em></h2>
-<p><a href="https://fivethirtyeight.com/tag/the-riddler/">The Riddler</a> is the excellent math and logic puzzle weekly by Oliver Roeder. Puzzles are posted every friday, together with the solutions to the previous week’s puzzles. I ocasionally submit proposed solutions, using R whenever possible. Yesterday Ollie was kind enough to give me a <a href="https://fivethirtyeight.com/features/can-you-find-the-perfect-poker-hand-can-you-shut-this-infernal-box/">shout out</a> for the ggplot chart that I provided together with my solution to the previous week’s <a href="https://fivethirtyeight.com/features/when-will-the-arithmetic-anarchists-attack/">Riddler Express</a>. This is a brief post going over my submission code, please refer to Ollie’s post for the puzzle description. The puzzle can be solved with just 16 lines of R code.</p>
+<p><a href="https://fivethirtyeight.com/tag/the-riddler/">The Riddler</a> is the excellent math and logic puzzle weekly by Oliver Roeder. Puzzles are posted every friday, together with the solutions to the previous week’s puzzles. I occasionally submit proposed solutions, using R whenever possible. Yesterday Ollie was kind enough to give me a <a href="https://fivethirtyeight.com/features/can-you-find-the-perfect-poker-hand-can-you-shut-this-infernal-box/">shout out</a> for the ggplot chart that I provided together with my solution to the previous week’s <a href="https://fivethirtyeight.com/features/when-will-the-arithmetic-anarchists-attack/">Riddler Express</a>. This is a brief post going over my submission code, please refer to Ollie’s post for the puzzle description. The puzzle can be solved with just 16 lines of R code.</p>
 </div>
 <div id="r-code-to-evaluate-all-21st-century-dates" class="section level2">
 <h2>R Code to Evaluate All 21st Century Dates</h2>
@@ -43,7 +43,8 @@ results[2:212,3] &lt;- diff(results[,1])</code></pre>
 <div id="what-year-will-have-the-most-vandalism" class="section level3">
 <h3>What Year Will Have the Most Vandalism?</h3>
 <p>names(sort(table(results[2:212,2]), decreasing = T)[1]): 2024</p>
-<p>How Many? sort(table(results[2:212,2]), decreasing = T)[1]: 7</p>
+<p>How Many?
+sort(table(results[2:212,2]), decreasing = T)[1]: 7</p>
 </div>
 <div id="what-year-will-the-least-vandalism-multiple-years-have-no-attacks-see-chart-below" class="section level3">
 <h3>What Year Will the Least Vandalism? Multiple Years Have No Attacks, See Chart Below</h3>
@@ -71,7 +72,8 @@ ggplot(bc,aes(x=Year,y=Count)) +geom_col(aes(fill=Count)) +theme_classic() +scal
   ggtitle(&#39;Anarchist Attacks by Year&#39;,subtitle = &#39;212 Anarchist Attacks in Century&#39;)</code></pre>
 <p><img src="/post/2018-04-14-riddler-express-arithmetic-anarchists-attack_files/figure-html/results-1.png" width="672" /></p>
 <p>Twitter user <span class="citation">@Cardlinger</span> commented on the fact that the y axis seems to start at a negative value. This allows for “zeros” on the chart to be clearly distinguished. Otherwise, with 99 bars, the small gaps between gaps caused by zeros would be difficult to identify.</p>
-<p>{{% tweet "984800244037771270" %}} {{% tweet "984800435973312513" %}}</p>
+<p>{{% tweet "984800244037771270" %}}
+{{% tweet "984800435973312513" %}}</p>
 <div id="thanks-ollie" class="section level3">
 <h3><a href="https://fivethirtyeight.com/features/can-you-find-the-perfect-poker-hand-can-you-shut-this-infernal-box/">Thanks, Ollie!</a></h3>
 <p><img src="/images/AnarchistAttacks/Ollie.png" style="display: block; margin: auto;" /></p>

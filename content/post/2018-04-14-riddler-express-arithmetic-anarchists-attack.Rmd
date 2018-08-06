@@ -12,7 +12,7 @@ slug: riddler-express-arithmetic-anarchists-attack
 
 ## *On the April 6, 2018 FiveThirtyEight Riddler Express*
 
-[The Riddler](https://fivethirtyeight.com/tag/the-riddler/) is the excellent math and logic puzzle weekly by Oliver Roeder. Puzzles are posted every friday, together with the solutions to the previous week's puzzles.  I ocasionally submit proposed solutions, using R whenever possible.  Yesterday Ollie was kind enough to give me a [shout out](https://fivethirtyeight.com/features/can-you-find-the-perfect-poker-hand-can-you-shut-this-infernal-box/) for the ggplot chart that I provided together with my solution to the previous week's [Riddler Express](https://fivethirtyeight.com/features/when-will-the-arithmetic-anarchists-attack/). This is a brief post going over my submission code, please refer to Ollie's post for the puzzle description. The puzzle can be solved with just 16 lines of R code. 
+[The Riddler](https://fivethirtyeight.com/tag/the-riddler/) is the excellent math and logic puzzle weekly by Oliver Roeder. Puzzles are posted every friday, together with the solutions to the previous week's puzzles.  I occasionally submit proposed solutions, using R whenever possible.  Yesterday Ollie was kind enough to give me a [shout out](https://fivethirtyeight.com/features/can-you-find-the-perfect-poker-hand-can-you-shut-this-infernal-box/) for the ggplot chart that I provided together with my solution to the previous week's [Riddler Express](https://fivethirtyeight.com/features/when-will-the-arithmetic-anarchists-attack/). This is a brief post going over my submission code, please refer to Ollie's post for the puzzle description. The puzzle can be solved with just 16 lines of R code. 
 
 
 ## R Code to Evaluate All 21st Century Dates
