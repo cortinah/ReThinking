@@ -51,7 +51,7 @@ ggplot(as.data.frame(total),aes(x=total)) +geom_density(fill='lightgrey') +
   theme_hc() +labs(x='Number of 10-card packs needed',
                    title='FiveThirtyEight Riddler Classic: Riddler League Football Cards, Silver Set',
                    caption='Source: @cortinah; 9/7/2018',y='Probability Density',
-                   subtitle='Mean number of packs needed: 49.7; number of weeks needed: 4.97 (5)\nStandard error of estimate: 0.24')
+                   subtitle='Mean number of packs needed: 49.7; number of weeks needed: 4.97 (5)\nStandard error of estimate: 0.24') +theme(axis.title = element_text(size=16))
 
 all_runs[is.na(all_runs)] <- 100
 
@@ -69,7 +69,7 @@ ggplot(all_runs,aes(x=run,y=value)) +geom_line(aes(color=key)) +theme_hc() +
 
 
 ### Gold set simulation (300 cards)
-The Gold set requires 300 unique cards and therefore on average about 187 10-card packs. Since it's more computationally intensive, I reduce the number of simulations to 1,500 which results in a standard error of the mean of about one.
+The Gold set requires 300 unique cards and therefore on average about 187 10-card packs. Since it's more computationally intensive --and I'm not very patient-- I reduce the number of simulations to 1,500 which results in a standard error of the mean of about one.
 
 ```{r gold, message=F, echo=FALSE, message=FALSE, warning=FALSE, fig.width=8.5,fig.height=5}
 cards <- 1:300
@@ -101,7 +101,7 @@ ggplot(as.data.frame(total),aes(x=total)) +geom_density(fill='lightgrey') +
   theme_hc() +labs(x='Number of 10-card packs needed',
                    title='FiveThirtyEight Riddler Classic: Riddler League Football Cards, Gold Set',
                    caption='Source: @cortinah; 9/7/2018',y='Probability Density',
-                   subtitle='Mean number of packs needed: 186.7; number of weeks needed: 18.7 (19)\nStandard error of estimate: 0.98')
+                   subtitle='Mean number of packs needed: 186.7; number of weeks needed: 18.7 (19)\nStandard error of estimate: 0.98') +theme(axis.title = element_text(size=16))
 
 all_runs[is.na(all_runs)] <- 300
 
@@ -116,5 +116,10 @@ ggplot(all_runs,aes(x=run,y=value)) +geom_line(aes(color=key)) +theme_hc() +
        caption='Source: @cortinah; 9/7/2018',y='Number of unique cards held', subtitle='Unique cards vs packs purchased path visualization') +
   theme(axis.title = element_text(size=16)) +xlim(0, 250)
 ```
+
+### Let's end with an animation of the Gold Set simulation
+Everyone seems to love animated gifs nowadays.
+
+![](/post/2018-09-08-riddler-classic-football-cards_files/silveranim-crop.gif){width=100%}
 
 As always, thank you Oliver Roeder (@ollie) for the fun riddlers.

@@ -51,7 +51,7 @@ ggplot(as.data.frame(total),aes(x=total)) +geom_density(fill=&#39;lightgrey&#39;
   theme_hc() +labs(x=&#39;Number of 10-card packs needed&#39;,
                    title=&#39;FiveThirtyEight Riddler Classic: Riddler League Football Cards, Silver Set&#39;,
                    caption=&#39;Source: @cortinah; 9/7/2018&#39;,y=&#39;Probability Density&#39;,
-                   subtitle=&#39;Mean number of packs needed: 49.7; number of weeks needed: 4.97 (5)\nStandard error of estimate: 0.24&#39;)</code></pre>
+                   subtitle=&#39;Mean number of packs needed: 49.7; number of weeks needed: 4.97 (5)\nStandard error of estimate: 0.24&#39;) +theme(axis.title = element_text(size=16))</code></pre>
 <p><img src="/post/2018-09-08-riddler-classic-football-cards_files/figure-html/silver-1.png" width="816" /></p>
 <pre class="r"><code>all_runs[is.na(all_runs)] &lt;- 100
 
@@ -69,8 +69,13 @@ ggplot(all_runs,aes(x=run,y=value)) +geom_line(aes(color=key)) +theme_hc() +
 </div>
 <div id="gold-set-simulation-300-cards" class="section level3">
 <h3>Gold set simulation (300 cards)</h3>
-<p>The Gold set requires 300 unique cards and therefore on average about 187 10-card packs. Since it’s more computationally intensive, I reduce the number of simulations to 1,500 which results in a standard error of the mean of about one.</p>
+<p>The Gold set requires 300 unique cards and therefore on average about 187 10-card packs. Since it’s more computationally intensive –and I’m not very patient– I reduce the number of simulations to 1,500 which results in a standard error of the mean of about one.</p>
 <p><img src="/post/2018-09-08-riddler-classic-football-cards_files/figure-html/gold-1.png" width="816" /><img src="/post/2018-09-08-riddler-classic-football-cards_files/figure-html/gold-2.png" width="816" /></p>
+</div>
+<div id="lets-end-with-an-animation-of-the-gold-set-simulation" class="section level3">
+<h3>Let’s end with an animation of the Gold Set simulation</h3>
+<p>Everyone seems to love animated gifs nowadays.</p>
+<p><img src="/post/2018-09-08-riddler-classic-football-cards_files/silveranim-crop.gif" style="width:100.0%" /></p>
 <p>As always, thank you Oliver Roeder (<span class="citation">@ollie</span>) for the fun riddlers.</p>
 </div>
 </div>
