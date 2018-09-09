@@ -12,13 +12,13 @@ tags:
 
 
 
-<div id="another-riddler-classic-simulation" class="section level2">
-<h2>Another Riddler Classic Simulation</h2>
+<div id="another-riddler-classic-simulation-animation" class="section level2">
+<h2>Another Riddler Classic Simulation + Animation</h2>
 <p>This week’s <a href="https://fivethirtyeight.com/features/id-like-to-use-my-riddler-lifeline/">FiveThirtyEight Riddler Classic</a> presented another opportunity to simulate repeated sampling and visualize the results. In this instance we needed to find the average number of unique 10-card samples needed to form a set of 100 unique cards. The first resulting chart shows the distribution of the results of each sim using a density plot. I tried to add a bit of statistical rigor by calculating the standard error of the mean number of samples. This has the benefit of helping decide how many times the simulation should be run. In this case I used the well-known standard error of the mean formula:</p>
 <p><span class="math display">\[
 S.E.=\frac{\sigma(x)}{\sqrt{n}}
 \]</span></p>
-<p>Where <span class="math inline">\(\sigma(x)\)</span> is the standard deviation of the number of 10-card packs needed across all simulations and n is the number of simulations. For the Silver Set I went with 2,500 simulations which results in a S.E. of 0.24. Accordingly, a 95% confidence interval for the number of 10-card packs needed of (49.18, 50.15).</p>
+<p>Where <span class="math inline">\(\sigma(x)\)</span> is the standard deviation of the number of 10-card packs needed across all simulations and n is the number of simulations. For the Silver Set I went with 2,500 simulations which results in a S.E. of 0.24. Accordingly, a 95% confidence interval for the number of 10-card packs needed of (49.18, 50.15). At the end of this post I take a stab at an animation of the paths to a complete Silver set.</p>
 <div id="silver-set-simulation-100-unique-cards" class="section level3">
 <h3>Silver set simulation (100 unique cards)</h3>
 <pre class="r"><code>library(tidyverse)
@@ -73,9 +73,9 @@ ggplot(all_runs,aes(x=run,y=value)) +geom_line(aes(color=key)) +theme_hc() +
 <p>The Gold set requires 300 unique cards and therefore on average about 187 10-card packs. Since it’s more computationally intensive –and I’m not very patient– I reduce the number of simulations to 1,500 which results in a standard error of the mean of about one.</p>
 <p><img src="/post/2018-09-08-riddler-classic-football-cards_files/figure-html/gold-1.png" width="816" /><img src="/post/2018-09-08-riddler-classic-football-cards_files/figure-html/gold-2.png" width="816" /></p>
 </div>
-<div id="lets-end-with-an-animation-of-the-gold-set-simulation" class="section level3">
-<h3>Let’s end with an animation of the Gold Set simulation</h3>
-<p>Everyone seems to love animated gifs nowadays.</p>
+<div id="lets-end-with-an-animation-of-the-silver-set-simulation" class="section level3">
+<h3>Let’s end with an animation of the Silver Set simulation</h3>
+<p>Everyone seems to love animated gifs nowadays. Thank you to <span class="citation">@thomasp85</span> for gganimate package.</p>
 <p><img src="/post/2018-09-08-riddler-classic-football-cards_files/silveranim-crop.gif" style="width:100.0%" /></p>
 <p>As always, thank you Oliver Roeder (<span class="citation">@ollie</span>) for the fun riddlers.</p>
 </div>
