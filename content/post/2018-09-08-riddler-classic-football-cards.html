@@ -14,7 +14,9 @@ tags:
 
 <div id="another-riddler-classic-simulation-animation" class="section level2">
 <h2>Another Riddler Classic Simulation + Animation</h2>
-<p>This week’s <a href="https://fivethirtyeight.com/features/id-like-to-use-my-riddler-lifeline/">FiveThirtyEight Riddler Classic</a> presented another opportunity to simulate repeated sampling and visualize the results. In this instance we needed to find the average number of unique 10-card samples needed to form a set of 100 unique cards. The first resulting chart shows the distribution of the results of each sim using a density plot. I tried to add a bit of statistical rigor by calculating the standard error of the mean number of samples. This has the benefit of helping decide how many times the simulation should be run. In this case I used the well-known standard error of the mean formula:</p>
+{{% tweet "1038050924692942849" %}}
+<p>This week’s <a href="https://fivethirtyeight.com/features/id-like-to-use-my-riddler-lifeline/">FiveThirtyEight Riddler Classic</a> presented another opportunity to simulate repeated sampling and visualize the results. In this instance we needed to find the average number of unique 10-card samples needed to form a set of 100 unique cards.</p>
+<p>The first resulting chart below shows the distribution of the results of each sim using a density plot. I tried to add a bit of statistical rigor by calculating the standard error of the mean number of samples. This has the benefit of helping decide how many times the simulation should be run. In this case I used the well-known standard error of the mean formula:</p>
 <p><span class="math display">\[
 S.E.=\frac{\sigma(x)}{\sqrt{n}}
 \]</span></p>
@@ -75,7 +77,7 @@ ggplot(all_runs,aes(x=run,y=value)) +geom_line(aes(color=key)) +theme_hc() +
 </div>
 <div id="lets-end-with-an-animation-of-the-silver-set-simulation" class="section level3">
 <h3>Let’s end with an animation of the Silver Set simulation</h3>
-<p>Everyone seems to love animated gifs nowadays. Thank you to <span class="citation">@thomasp85</span> for gganimate package.</p>
+<p>Everyone seems to love animated gifs nowadays. Thank you <span class="citation">@thomasp85</span> for gganimate package.</p>
 <p><img src="/post/2018-09-08-riddler-classic-football-cards_files/silveranim-crop.gif" style="width:100.0%" /></p>
 <p>As always, thank you Oliver Roeder (<span class="citation">@ollie</span>) for the fun riddlers.</p>
 </div>
