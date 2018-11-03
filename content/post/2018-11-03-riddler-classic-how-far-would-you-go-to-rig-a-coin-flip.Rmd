@@ -1,0 +1,116 @@
+---
+title: 'Riddler Classic: How Far Would You Go To Rig A Coin Flip?'
+author: Hernando Cortina
+date: '2018-11-03'
+slug: riddler-classic-how-far-would-you-go-to-rig-a-coin-flip
+categories:
+  - R
+tags:
+  - Riddler
+---
+
+## An Election Probability Riddler Classic, Just in Time for November 6
+
+`r blogdown::shortcode("tweet", "1058350890225156098")`
+
+This week's [FiveThirtyEight Riddler Classic](https://fivethirtyeight.com/features/how-far-would-you-go-to-rig-a-coin-flip/) was about winning elections, fair and square, or by any means necessary... In this case, it's Programmers versus Theorists, and elections are decided by flipping coins for each of one hundred Senate seats.  As an analyst for Riddler Nation’s wildly successful data-driven political blog, OneHundred these are the questions we are confronted with today:
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(results = 'asis')
+options(digits=4)
+library(ggplot2)
+```
+
+## Question 1: What is the probability that one party will win a simple majority?
+### Need 51 or more Senate seats for a simple majority
+
+$$
+P=\sum_{k=51}^{k=100}\binom{100}{k}p^{k}(1-p)^{100-k}\;\;\;\;\;\;\;\;\;\;\;\;\;(1)
+$$
+
+$$With\; a\; fair\; coin:\;\;p = \frac{1}{2} $$
+$$ P= \left ( \frac{1}{2} \right )^{100}\;\sum_{k=51}^{k=100}\binom{100}{k}$$
+
+```{r Q1simple, results='asis'}
+senators <- 51:100
+sum(choose(100, senators)) * (1/2)^100
+```
+
+### Need 60 or more Senate seats for a supermajority
+```{r Q1super}
+senators <- 60:100
+sum(choose(100, senators)) * (1/2)^100
+```
+
+## Question 2: what weighting would give them a 50% chance of winning a 60-seat supermajority?
+From equation (1), must solve for p such that:
+$$
+\frac{1}{2}=\sum_{k=51}^{k=100}\binom{100}{k}p^{k}(1-p)^{100-k}
+$$
+Find the root in (0, 1) of:
+$$
+\sum_{k=51}^{k=100}\binom{100}{k}p^{k}(1-p)^{100-k}-\frac{1}{2}=0
+$$
+```{r Q2prob}
+senators <- 60:100
+weighting <- function(x) sum(choose(100, senators) * (x^senators) * (1-x)^(100-senators)) - 0.5
+result <- uniroot(weighting, c(0,1))
+result$root
+```
+
+### How often can the Programmers cheat before the Theorists can prove there's at least a 99% chance that the coin wasn't fair?
+Each election consists of a binomial distribution with n=100 and under the null hypothesis that the coin is fair p = 1/2.  Accordingly, we can look at the 99% quantile of this binomial until the number of Programmers winning falls outside the 99% quantile. With one election (n=100) the 99th-percentile is 62, so a Programmer supermajority is more than 1% likely. With two elections (n=200) the 99th-percentile is 116, so the likelihood of the Programmers winning more than 60 seats in each election (120 total) falls outside the 99th-percentile.  Thus, the theorists can prove the Programmers cheat after two election cycles.
+
+```{r Q2binomials}
+qbinom(c(0, 0.99), size=100, prob=0.5)
+qbinom(c(0, 0.99), size=200, prob=0.5)
+```
+
+## Question 3: If the Programmers decide to cheat by weighting the coin permanently for the next 100 elections, how heavily can they weight it and escape a 99% challenge by the Theorists?
+Over 100 years there will be 10,000 separate coin flips. The 99th-percentile of this binomial distribution is 5,116. This implies they can cheat by giving themselves a probability p up to 0.5116
+
+```{r Q3cheat}
+qbinom(c(0, 0.99), size=10000, prob=0.5)
+```
+
+### How many 60-seat supermajorities can they expect to win over this 100-year period?
+We use equation (1) to calculate the probability of winning a supermajority in a given election. This approximately 4.7%. Accordingly, the Programmers can expect to win 4-5 supermajorities over a century.
+```{r Q3howmanysuper}
+p <- 0.5116
+senators <- 60:100
+sum(choose(100, senators) * (p^senators) * (1-p)^(100-senators))
+
+100 * sum(choose(100, senators) * (p^senators) * (1-p)^(100-senators))
+
+
+
+```
+
+## Question 4: What is the optimal cheating strategy for the Programmers?
+We calculate for each year the cumulative 99th percentile of coin flips the Programmers can win while remaining "innocent" before the Statistical Court. We subtract one from that amount and determine the required coin weight to produce those expected wins.
+```{r optimal}
+optimal <- as.data.frame(matrix(NA,nrow=125,ncol=5))
+colnames(optimal) <- c('Year','quantile','opt','diff','Weight')
+optimal$Year <- 1:125
+optimal$quantile <- qbinom(0.99, size=100*optimal$Year, prob=0.5)
+optimal$opt <- optimal$quantile-1
+optimal$diff[2:125] <- diff(optimal$opt); optimal$diff[1] <- 61
+optimal$Weight <- optimal$diff/100
+```
+
+```{r pressure, echo=FALSE}
+ggplot(optimal,aes(x=Year,y=Weight)) +geom_line(color='blue') +geom_point(color='red') +theme_bw() +labs(title='Riddler Classic: How Far Would You Go To Rig A Coin Flip?', subtitle='Optimal coin weight avoiding 99% detection probability',caption='Source: @cortinah, 11/2/2018')
+```
+
+
+## Question 5: Does changing the coin weight on a seat-by-seat basis help improve the Programmers' odds in any of these scenarios?
+No, it wouldn't because the Theorists are checking the election results on an election-by-election basis, based on the number of seats won by the Programmers, which is an integer value that must be within the 99th percentile of a binomial distribution. Setting different win probabilities by seat does not change the check of the overall election.  
+
+## Addendum
+As Riddler Nation star @laurentLessard pointed out, there is some ambiguity in the wording of these questions that necessitate some clarification:
+
+`r blogdown::shortcode("tweet", "1058476763737657345")`
+
+In particular, the above results for questions 3-5 hold in an expected value sense, but not necessarily in a realized sense. Specifically, the Programmers may cheat by weighting the coin in a favorable way and still fail to beat the Theorists.  There is also the possibility that they nay tilt the odds in their favor more than the "optimal" and still fail to be detected.  Anything *could* happen, but the calculations above should hold "on average", if there were thousands of Riddler Nations out there.
