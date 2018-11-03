@@ -14,7 +14,7 @@ tags:
 <div id="an-election-probability-riddler-classic-just-in-time-for-november-6" class="section level2">
 <h2>An Election Probability Riddler Classic, Just in Time for November 6</h2>
 {{% tweet "1058350890225156098" %}}
-<p>This week’s <a href="https://fivethirtyeight.com/features/how-far-would-you-go-to-rig-a-coin-flip/">FiveThirtyEight Riddler Classic</a> was about winning elections, fair and square, or by any means necessary… In this case, it’s Programmers versus Theorists, and elections are decided by flipping coins for each of one hundred Senate seats. As an analyst for Riddler Nation’s wildly successful data-driven political blog, OneHundred these are the questions we are confronted with today:</p>
+<p>This week’s <a href="https://fivethirtyeight.com/features/how-far-would-you-go-to-rig-a-coin-flip/">FiveThirtyEight Riddler Classic</a> was about winning elections, fair and square, or by any means necessary… In this case, it’s Programmers versus Theorists, and elections are decided by flipping coins for each of one hundred Senate seats. As an analyst for Riddler Nation’s wildly successful data-driven political blog, OneHundred, these are the questions we are confronted with today:</p>
 </div>
 <div id="question-1-what-is-the-probability-that-one-party-will-win-a-simple-majority" class="section level2">
 <h2>Question 1: What is the probability that one party will win a simple majority?</h2>
@@ -67,7 +67,7 @@ result$root</code></pre>
 <p>[1] 0 5116</p>
 <div id="how-many-60-seat-supermajorities-can-they-expect-to-win-over-this-100-year-period" class="section level3">
 <h3>How many 60-seat supermajorities can they expect to win over this 100-year period?</h3>
-<p>We use equation (1) to calculate the probability of winning a supermajority in a given election. This approximately 4.7%. Accordingly, the Programmers can expect to win 4-5 supermajorities over a century.</p>
+<p>We use equation (1) to calculate the probability of winning a supermajority in a given election. This is approximately 4.7%. Accordingly, the Programmers can expect to win 4-5 supermajorities over a century.</p>
 <pre class="r"><code>p &lt;- 0.5116
 senators &lt;- 60:100
 sum(choose(100, senators) * (p^senators) * (1-p)^(100-senators))</code></pre>

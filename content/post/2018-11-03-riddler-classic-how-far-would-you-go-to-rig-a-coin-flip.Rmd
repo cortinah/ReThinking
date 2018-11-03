@@ -13,7 +13,7 @@ tags:
 
 `r blogdown::shortcode("tweet", "1058350890225156098")`
 
-This week's [FiveThirtyEight Riddler Classic](https://fivethirtyeight.com/features/how-far-would-you-go-to-rig-a-coin-flip/) was about winning elections, fair and square, or by any means necessary... In this case, it's Programmers versus Theorists, and elections are decided by flipping coins for each of one hundred Senate seats.  As an analyst for Riddler Nation’s wildly successful data-driven political blog, OneHundred these are the questions we are confronted with today:
+This week's [FiveThirtyEight Riddler Classic](https://fivethirtyeight.com/features/how-far-would-you-go-to-rig-a-coin-flip/) was about winning elections, fair and square, or by any means necessary... In this case, it's Programmers versus Theorists, and elections are decided by flipping coins for each of one hundred Senate seats.  As an analyst for Riddler Nation’s wildly successful data-driven political blog, OneHundred, these are the questions we are confronted with today:
 
 
 ```{r setup, include=FALSE}
@@ -33,7 +33,7 @@ $$
 $$With\; a\; fair\; coin:\;\;p = \frac{1}{2} $$
 $$ P= \left ( \frac{1}{2} \right )^{100}\;\sum_{k=51}^{k=100}\binom{100}{k}$$
 
-```{r Q1simple, results='asis'}
+```{r Q1simple}
 senators <- 51:100
 sum(choose(100, senators)) * (1/2)^100
 ```
@@ -76,7 +76,7 @@ qbinom(c(0, 0.99), size=10000, prob=0.5)
 ```
 
 ### How many 60-seat supermajorities can they expect to win over this 100-year period?
-We use equation (1) to calculate the probability of winning a supermajority in a given election. This approximately 4.7%. Accordingly, the Programmers can expect to win 4-5 supermajorities over a century.
+We use equation (1) to calculate the probability of winning a supermajority in a given election. This is approximately 4.7%. Accordingly, the Programmers can expect to win 4-5 supermajorities over a century.
 ```{r Q3howmanysuper}
 p <- 0.5116
 senators <- 60:100
