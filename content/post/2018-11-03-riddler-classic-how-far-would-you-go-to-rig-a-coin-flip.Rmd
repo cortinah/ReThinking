@@ -104,6 +104,7 @@ optimal$Weight <- optimal$diff/100
 ggplot(optimal,aes(x=Year,y=Weight)) +geom_line(color='blue') +geom_point(color='red') +theme_bw() +labs(title='Riddler Classic: How Far Would You Go To Rig A Coin Flip?', subtitle='Optimal coin weight avoiding 99th percentile statistical challenge',caption='Source: @cortinah, 11/2/2018')
 ```
 
+We  notice an interesting oscillatory pattern where after cravenly cheating for over 30 years, the Programmers' coin needs to be fair in a growing proportion of elections over time. When they have enough "buffer", the Programmers can cheat for an election, or two, before returning to a fair coin.
 
 ## Question 5: Does changing the coin weight on a seat-by-seat basis help improve the Programmers' odds in any of these scenarios?
 No, it wouldn't because the Theorists are checking the election results on an election-by-election basis, based on the number of seats won by the Programmers, which is an integer value that must be within the 99th percentile of a binomial distribution. Setting different win probabilities by seat does not change the check of the overall election.  
