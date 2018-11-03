@@ -101,7 +101,7 @@ optimal$Weight <- optimal$diff/100
 ```
 
 ```{r pressure, echo=FALSE}
-ggplot(optimal,aes(x=Year,y=Weight)) +geom_line(color='blue') +geom_point(color='red') +theme_bw() +labs(title='Riddler Classic: How Far Would You Go To Rig A Coin Flip?', subtitle='Optimal coin weight avoiding 99% detection probability',caption='Source: @cortinah, 11/2/2018')
+ggplot(optimal,aes(x=Year,y=Weight)) +geom_line(color='blue') +geom_point(color='red') +theme_bw() +labs(title='Riddler Classic: How Far Would You Go To Rig A Coin Flip?', subtitle='Optimal coin weight avoiding 99th percentile statistical challenge',caption='Source: @cortinah, 11/2/2018')
 ```
 
 
