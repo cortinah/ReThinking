@@ -15,7 +15,9 @@ tags:
 
 This week's [FiveThirtyEight Riddler Classic](https://fivethirtyeight.com/features/how-far-would-you-go-to-rig-a-coin-flip/) was about winning elections, fair and square, or by any means necessary... In this case, it's Programmers versus Theorists, and elections are decided by flipping coins for each of one hundred Senate seats.  As an analyst for Riddler Nation’s wildly successful data-driven political blog, OneHundred, these are the questions we are confronted with today:
 
+### UPDATE (November 9): `r emo::ji("grinning")` `r emo::ji("1st_place_medal")` `r emo::ji("champagne")` `r emo::ji("tada")` Hooray! My solution was chosen by @ollie as last week's [winner](https://fivethirtyeight.com/features/what-are-the-odds-youd-already-have-my-number/).  Thank you very much Ollie for the kind write-up. `r emo::ji("grinning")` `r emo::ji("1st_place_medal")` `r emo::ji("champagne")` `r emo::ji("tada")`
 
+![](/post/2018-11-03-riddler-classic-how-far-would-you-go-to-rig-a-coin-flip_files/Screen Shot 2018-11-09 at 10.07.22 PM.png){width=85%}
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_chunk$set(results = 'asis')
