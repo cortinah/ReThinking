@@ -44,11 +44,11 @@ sum(choose(100, senators)) * (1/2)^100</code></pre>
 <h2>Question 2: what weighting would give them a 50% chance of winning a 60-seat supermajority?</h2>
 <p>From equation (1), must solve for p such that:
 <span class="math display">\[
-\frac{1}{2}=\sum_{k=51}^{k=100}\binom{100}{k}p^{k}(1-p)^{100-k}
+\frac{1}{2}=\sum_{k=60}^{k=100}\binom{100}{k}p^{k}(1-p)^{100-k}
 \]</span>
 Find the root in (0, 1) of:
 <span class="math display">\[
-\sum_{k=51}^{k=100}\binom{100}{k}p^{k}(1-p)^{100-k}-\frac{1}{2}=0
+\sum_{k=60}^{k=100}\binom{100}{k}p^{k}(1-p)^{100-k}-\frac{1}{2}=0
 \]</span></p>
 <pre class="r"><code>senators &lt;- 60:100
 weighting &lt;- function(x) sum(choose(100, senators) * (x^senators) * (1-x)^(100-senators)) - 0.5
