@@ -13,3 +13,5 @@ Please reach out at <i class="fa fa-envelope-open" aria-hidden="true"></i><mailt
 # About this site
 
 This website was built using the [**blogdown**](https://github.com/rstudio/blogdown) package following [Alison Presmanes Hill](https://apreshill.rbind.io)'s guide. View the repository that creates this website on [GitHub](https://github.com/cortinah/Rethinking). The theme was forked from [@jrutheiser/hugo-lithium-theme](https://github.com/jrutheiser/hugo-lithium-theme) and modified by [Yihui Xie](https://github.com/yihui/hugo-lithium-theme) and me. 
+
+Find me on [R-Bloggers](https://www.r-bloggers.com)

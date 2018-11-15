@@ -68,3 +68,6 @@ enableEmoji = true
 [taxonomies]
 tag = "tags"
 category = "categories"
+
+# options for RSS feed
+  rssLimit = 15
