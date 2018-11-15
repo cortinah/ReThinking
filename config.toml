@@ -6,6 +6,7 @@ googleAnalytics = "UA-114380969-1"
 disqusShortname = "rethinking-rbind-io"
 ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
 enableEmoji = true
+rssLimit = 15
 [permalinks]
     post = "/:year/:month/:day/:slug/"
 
@@ -68,6 +69,3 @@ enableEmoji = true
 [taxonomies]
 tag = "tags"
 category = "categories"
-
-# options for RSS feed
-  rssLimit = 15
