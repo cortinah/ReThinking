@@ -22,7 +22,7 @@ The [urgent need](http://www.ipcc.ch/report/sr15/) to address climate change imp
 The post sparked the idea of reproducing these five charts in R, using ggplot2 to create crisp graphs, and make the source of the data and process fully reproducible. This could make it easier for others to also share this data. The code to generate each of these five important charts is below.  I rely on basic tidyverse libraries as well as the patchwork package to generate the mosaic chart at the end. I plan to periodically update these charts to keep them up to date, and add additional data sets and graphs over time. I hope you find this useful and welcome your comments.
 
 ## Data Set #1: The Link Between Temperature and Atmospheric CO~2~
-```{r icecore, warning=F, message=F, fig.width=9, fig.height=7}
+```{r icecore, warning=F, message=F, fig.width=9.5, fig.height=7}
 library(tidyverse)
 library(patchwork)
 library(lubridate)
@@ -53,7 +53,7 @@ b <- ggplot(paleotemp,aes(x=age_ice,y=temp)) +geom_line(aes(y=rollmean(temp, 8, 
 ```
 
 ## Data Set #2: The Anthropogenic Rise in CO~2~ Concentration
-```{r keeling, warning=F, message=F, fig.width=9, fig.height=6}
+```{r keeling, warning=F, message=F, fig.width=9.5, fig.height=6}
 file_url <- 'ftp://aftp.cmdl.noaa.gov/products/trends/co2/co2_mm_mlo.txt'
 download.file(file_url,'maunaloa.txt')
 maunaloa <- read_table2("maunaloa.txt", col_names = FALSE, skip = 72)
@@ -67,7 +67,7 @@ maunaloa$date <- as.Date(as.yearmon(paste(maunaloa$year, maunaloa$month, sep='-'
 ```
 
 ## Data Set #3: Rising Global Temperatures...
-```{r temperature, warning=F, message=F, fig.width=9, fig.height=6}
+```{r temperature, warning=F, message=F, fig.width=9.5, fig.height=6}
 file_url <- 'https://data.giss.nasa.gov/gistemp/tabledata_v3/GLB.Ts+dSST.csv'
 download.file(file_url,'gisstemp.csv')
 gisstemp <- read_csv("gisstemp.csv", skip=1, na='***')
@@ -87,7 +87,7 @@ gisstemp$annmean <- as.numeric(gisstemp$annmean)
 
 
 ## Data Set #4: ...And the Rising Sea Level
-```{r sealevel, warning=F, message=F, fig.width=9, fig.height=6}
+```{r sealevel, warning=F, message=F, fig.width=9.5, fig.height=6}
 file_url <- 'http://sealevel.colorado.edu/files/2018_rel1/sl_ns_global.txt'
 download.file(file_url,'gmsl_sat.csv')
 gmsl_sat <- read_table2("gmsl_sat.csv", col_names = FALSE, skip = 1)
@@ -118,7 +118,7 @@ gmsl <- gather(gmsl, key=method, value=gmsl, -date, na.rm=T)
 ```
 
 ## Data Set #5: Polar Sea Ice in Retreat
-```{r iceextent, warning=F, message=F, fig.width=9, fig.height=6}
+```{r iceextent, warning=F, message=F, fig.width=9.5, fig.height=6}
 file_url <- 'ftp://sidads.colorado.edu/DATASETS/NOAA/G02135/north/monthly/data/N_09_extent_v3.0.csv'
 download.file(file_url, 'arctic_ice_min.csv')
 arctic_ice_min <- read_csv("arctic_ice_min.csv")
