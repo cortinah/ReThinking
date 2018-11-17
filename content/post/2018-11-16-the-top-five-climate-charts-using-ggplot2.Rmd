@@ -41,10 +41,10 @@ colnames(paleotemp) <- c('depth','age_ice','deuterium','temp')
 
 theme_set(theme_bw(base_size = 14))
 
-a <- ggplot(vostok,aes(x=age_ice,y=co2)) +geom_line(size=1, col='red2') +scale_x_reverse(lim=c(420000,0)) +
+a <- ggplot(vostok,aes(x=age_ice,y=co2)) +geom_line(size=1, col='firebrick1') +scale_x_reverse(lim=c(420000,0)) +
   theme(axis.title.x=element_blank(), axis.text.x=element_blank()) +labs(y=expression(CO[2]*' concentration' ))
 
-b <- ggplot(paleotemp,aes(x=age_ice,y=temp)) +geom_line(aes(y=rollmean(temp, 8, na.pad=TRUE)), size=1, col='blue') +scale_x_reverse(lim=c(420000,0),
+b <- ggplot(paleotemp,aes(x=age_ice,y=temp)) +geom_line(aes(y=rollmean(temp, 8, na.pad=TRUE)), size=1, col='dodgerblue2') +scale_x_reverse(lim=c(420000,0),
             labels = scales::unit_format(unit='',scale = 1e-3)) +labs(x='Millennia before present', 
             y='Temperature (C)')
 
@@ -60,9 +60,9 @@ maunaloa <- read_table2("maunaloa.txt", col_names = FALSE, skip = 72)
 colnames(maunaloa) <- c('year', 'month', 'date', 'average', 'interpolated', 'trend','days')
 maunaloa$date <- as.Date(as.yearmon(paste(maunaloa$year, maunaloa$month, sep='-')))
 
-(d <- ggplot(maunaloa, aes(x=date, y=average)) +geom_line(color='blue', alpha=0.7) +
+(d <- ggplot(maunaloa, aes(x=date, y=average)) +geom_line(color='dodgerblue2', alpha=0.7) +
   scale_x_date(name=NULL, date_breaks='10 years', lim=c(ymd('1963-01-01'), ymd('2020-01-01')), date_labels='%Y') +scale_y_continuous(lim=c(300, 410), breaks=seq(300, 400, 20)) +
-  geom_line(aes(y=trend), size=1, col='red2') +labs(title=expression('Rising Atmospheric '*CO[2]*' (Keeling Curve)'), subtitle=expression('Mauna Loa '*CO[2]*' monthly mean ppm'),
+  geom_line(aes(y=trend), size=1, col='firebrick1') +labs(title=expression('Rising Atmospheric '*CO[2]*' (Keeling Curve)'), subtitle=expression('Mauna Loa '*CO[2]*' monthly mean ppm'),
   y=expression(CO[2]*' concentration in air' ), caption='Source: NOAA/ESRL and Scripps Institution of Oceanography.\nhttps://www.esrl.noaa.gov/gmd/ccgg/trends/data.html'))
 ```
 
@@ -82,7 +82,7 @@ gisstemp$annmean <- as.numeric(gisstemp$annmean)
   scale_y_continuous() +geom_smooth(size=1.1, se=F, span=0.2, aes(color='Loess smoothing')) +
   labs(title='Global Land-Ocean Temperature Index (LOTI)', subtitle='Global surface temperature relative to 1951-1980 average',
   y='Temperature Anomaly (C)', caption='Source: NASA Goddard Institute for Space Studies\nhttps://data.giss.nasa.gov/gistemp/') +
-  scale_color_manual(name=NULL, values=c('blue','red2')) +theme(legend.position = c(0.15,0.85),legend.background=element_blank()))
+  scale_color_manual(name=NULL, values=c('dodgerblue2','firebrick1')) +theme(legend.position = c(0.15,0.85),legend.background=element_blank()))
 ```
 
 
@@ -112,7 +112,7 @@ gmsl <- gather(gmsl, key=method, value=gmsl, -date, na.rm=T)
 
 (f <- ggplot(gmsl, aes(x=date,color=method,y=gmsl)) +geom_line(alpha=0.7,size=1) +
   scale_x_datetime(name=NULL, breaks='15 years', lim=c(ymd_hms('1878-01-01 00:00:00'), ymd_hms('2020-01-01 00:00:00')), date_labels ='%Y') +
-  scale_color_manual(values=c('blue','red2'),labels=c('Satellite observations','Coastal tide gauge records')) +theme(legend.position = c(0.20,0.80),legend.background=element_blank(),legend.title = element_blank()) +
+  scale_color_manual(values=c('dodgerblue2','firebrick1'),labels=c('Satellite observations','Coastal tide gauge records')) +theme(legend.position = c(0.20,0.80),legend.background=element_blank(),legend.title = element_blank()) +
   scale_y_continuous(breaks=seq(-200,75,25)) +
   labs(title='Sea Level Change', subtitle='Tide gauges: 1880-2009; Satellite: 1992-2018, calibrated to 1993 tide gauge average.', y='Variation (mm)', caption='Sources: University of Colorado Sea Level Research Group (sat)\nhttp://sealevel.colorado.edu/\nCSIRO (tide gauge)\nhttp://www.cmar.csiro.au/sealevel/sl_data_cmar.html'))
 ```
@@ -124,11 +124,12 @@ download.file(file_url, 'arctic_ice_min.csv')
 arctic_ice_min <- read_csv("arctic_ice_min.csv")
 arctic_ice_min$year <- round_date(date_decimal(arctic_ice_min$year), 'year')
 
-(g <- ggplot(arctic_ice_min,aes(x=year, y=extent)) +geom_line(size=1, color='red2') +
+(g <- ggplot(arctic_ice_min,aes(x=year, y=extent)) +geom_line(size=1, color='firebrick1') +
   scale_x_datetime(name=NULL, breaks='5 years', date_labels='%Y', lim=c(ymd_hms('1978-01-01 00:00:00'), ymd_hms('2020-01-01 00:00:00'))) +
   scale_y_continuous(lim=c(3,8)) + geom_smooth(method='lm', se=F, linetype=2, size=0.5) +
   labs(title='Arctic Sea Ice Minimum', subtitle='September average sea ice extent. Linear regression line in blue.', y='million square km', caption='Source: National Snow & Ice Data Center\nhttps://nsidc.org/data/seaice_index\nftp://sidads.colorado.edu/DATASETS/NOAA/G02135/north/monthly/data/N_09_extent_v3.0.csv'))
 ```
+  
   
 # Pulling it all together with patchwork
 ```{r reset, warning=F, message=F, echo=FALSE}

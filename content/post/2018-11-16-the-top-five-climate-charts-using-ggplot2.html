@@ -36,10 +36,10 @@ colnames(paleotemp) &lt;- c(&#39;depth&#39;,&#39;age_ice&#39;,&#39;deuterium&#39
 
 theme_set(theme_bw(base_size = 14))
 
-a &lt;- ggplot(vostok,aes(x=age_ice,y=co2)) +geom_line(size=1, col=&#39;red2&#39;) +scale_x_reverse(lim=c(420000,0)) +
+a &lt;- ggplot(vostok,aes(x=age_ice,y=co2)) +geom_line(size=1, col=&#39;firebrick1&#39;) +scale_x_reverse(lim=c(420000,0)) +
   theme(axis.title.x=element_blank(), axis.text.x=element_blank()) +labs(y=expression(CO[2]*&#39; concentration&#39; ))
 
-b &lt;- ggplot(paleotemp,aes(x=age_ice,y=temp)) +geom_line(aes(y=rollmean(temp, 8, na.pad=TRUE)), size=1, col=&#39;blue&#39;) +scale_x_reverse(lim=c(420000,0),
+b &lt;- ggplot(paleotemp,aes(x=age_ice,y=temp)) +geom_line(aes(y=rollmean(temp, 8, na.pad=TRUE)), size=1, col=&#39;dodgerblue2&#39;) +scale_x_reverse(lim=c(420000,0),
             labels = scales::unit_format(unit=&#39;&#39;,scale = 1e-3)) +labs(x=&#39;Millennia before present&#39;, 
             y=&#39;Temperature (C)&#39;)
 
@@ -55,9 +55,9 @@ maunaloa &lt;- read_table2(&quot;maunaloa.txt&quot;, col_names = FALSE, skip = 7
 colnames(maunaloa) &lt;- c(&#39;year&#39;, &#39;month&#39;, &#39;date&#39;, &#39;average&#39;, &#39;interpolated&#39;, &#39;trend&#39;,&#39;days&#39;)
 maunaloa$date &lt;- as.Date(as.yearmon(paste(maunaloa$year, maunaloa$month, sep=&#39;-&#39;)))
 
-(d &lt;- ggplot(maunaloa, aes(x=date, y=average)) +geom_line(color=&#39;blue&#39;, alpha=0.7) +
+(d &lt;- ggplot(maunaloa, aes(x=date, y=average)) +geom_line(color=&#39;dodgerblue2&#39;, alpha=0.7) +
   scale_x_date(name=NULL, date_breaks=&#39;10 years&#39;, lim=c(ymd(&#39;1963-01-01&#39;), ymd(&#39;2020-01-01&#39;)), date_labels=&#39;%Y&#39;) +scale_y_continuous(lim=c(300, 410), breaks=seq(300, 400, 20)) +
-  geom_line(aes(y=trend), size=1, col=&#39;red2&#39;) +labs(title=expression(&#39;Rising Atmospheric &#39;*CO[2]*&#39; (Keeling Curve)&#39;), subtitle=expression(&#39;Mauna Loa &#39;*CO[2]*&#39; monthly mean ppm&#39;),
+  geom_line(aes(y=trend), size=1, col=&#39;firebrick1&#39;) +labs(title=expression(&#39;Rising Atmospheric &#39;*CO[2]*&#39; (Keeling Curve)&#39;), subtitle=expression(&#39;Mauna Loa &#39;*CO[2]*&#39; monthly mean ppm&#39;),
   y=expression(CO[2]*&#39; concentration in air&#39; ), caption=&#39;Source: NOAA/ESRL and Scripps Institution of Oceanography.\nhttps://www.esrl.noaa.gov/gmd/ccgg/trends/data.html&#39;))</code></pre>
 <p><img src="/post/2018-11-16-the-top-five-climate-charts-using-ggplot2_files/figure-html/keeling-1.png" width="912" /></p>
 </div>
@@ -77,7 +77,7 @@ gisstemp$annmean &lt;- as.numeric(gisstemp$annmean)
   scale_y_continuous() +geom_smooth(size=1.1, se=F, span=0.2, aes(color=&#39;Loess smoothing&#39;)) +
   labs(title=&#39;Global Land-Ocean Temperature Index (LOTI)&#39;, subtitle=&#39;Global surface temperature relative to 1951-1980 average&#39;,
   y=&#39;Temperature Anomaly (C)&#39;, caption=&#39;Source: NASA Goddard Institute for Space Studies\nhttps://data.giss.nasa.gov/gistemp/&#39;) +
-  scale_color_manual(name=NULL, values=c(&#39;blue&#39;,&#39;red2&#39;)) +theme(legend.position = c(0.15,0.85),legend.background=element_blank()))</code></pre>
+  scale_color_manual(name=NULL, values=c(&#39;dodgerblue2&#39;,&#39;firebrick1&#39;)) +theme(legend.position = c(0.15,0.85),legend.background=element_blank()))</code></pre>
 <p><img src="/post/2018-11-16-the-top-five-climate-charts-using-ggplot2_files/figure-html/temperature-1.png" width="912" /></p>
 </div>
 <div id="data-set-4-and-the-rising-sea-level" class="section level2">
@@ -106,7 +106,7 @@ gmsl &lt;- gather(gmsl, key=method, value=gmsl, -date, na.rm=T)
 
 (f &lt;- ggplot(gmsl, aes(x=date,color=method,y=gmsl)) +geom_line(alpha=0.7,size=1) +
   scale_x_datetime(name=NULL, breaks=&#39;15 years&#39;, lim=c(ymd_hms(&#39;1878-01-01 00:00:00&#39;), ymd_hms(&#39;2020-01-01 00:00:00&#39;)), date_labels =&#39;%Y&#39;) +
-  scale_color_manual(values=c(&#39;blue&#39;,&#39;red2&#39;),labels=c(&#39;Satellite observations&#39;,&#39;Coastal tide gauge records&#39;)) +theme(legend.position = c(0.20,0.80),legend.background=element_blank(),legend.title = element_blank()) +
+  scale_color_manual(values=c(&#39;dodgerblue2&#39;,&#39;firebrick1&#39;),labels=c(&#39;Satellite observations&#39;,&#39;Coastal tide gauge records&#39;)) +theme(legend.position = c(0.20,0.80),legend.background=element_blank(),legend.title = element_blank()) +
   scale_y_continuous(breaks=seq(-200,75,25)) +
   labs(title=&#39;Sea Level Change&#39;, subtitle=&#39;Tide gauges: 1880-2009; Satellite: 1992-2018, calibrated to 1993 tide gauge average.&#39;, y=&#39;Variation (mm)&#39;, caption=&#39;Sources: University of Colorado Sea Level Research Group (sat)\nhttp://sealevel.colorado.edu/\nCSIRO (tide gauge)\nhttp://www.cmar.csiro.au/sealevel/sl_data_cmar.html&#39;))</code></pre>
 <p><img src="/post/2018-11-16-the-top-five-climate-charts-using-ggplot2_files/figure-html/sealevel-1.png" width="912" /></p>
@@ -118,7 +118,7 @@ download.file(file_url, &#39;arctic_ice_min.csv&#39;)
 arctic_ice_min &lt;- read_csv(&quot;arctic_ice_min.csv&quot;)
 arctic_ice_min$year &lt;- round_date(date_decimal(arctic_ice_min$year), &#39;year&#39;)
 
-(g &lt;- ggplot(arctic_ice_min,aes(x=year, y=extent)) +geom_line(size=1, color=&#39;red2&#39;) +
+(g &lt;- ggplot(arctic_ice_min,aes(x=year, y=extent)) +geom_line(size=1, color=&#39;firebrick1&#39;) +
   scale_x_datetime(name=NULL, breaks=&#39;5 years&#39;, date_labels=&#39;%Y&#39;, lim=c(ymd_hms(&#39;1978-01-01 00:00:00&#39;), ymd_hms(&#39;2020-01-01 00:00:00&#39;))) +
   scale_y_continuous(lim=c(3,8)) + geom_smooth(method=&#39;lm&#39;, se=F, linetype=2, size=0.5) +
   labs(title=&#39;Arctic Sea Ice Minimum&#39;, subtitle=&#39;September average sea ice extent. Linear regression line in blue.&#39;, y=&#39;million square km&#39;, caption=&#39;Source: National Snow &amp; Ice Data Center\nhttps://nsidc.org/data/seaice_index\nftp://sidads.colorado.edu/DATASETS/NOAA/G02135/north/monthly/data/N_09_extent_v3.0.csv&#39;))</code></pre>
