@@ -11,7 +11,7 @@ tags:
 ---
 ### The Problem
 
-This week's [Riddler Classic](https://fivethirtyeight.com/features/the-riddler-just-had-to-go-and-reinvent-beer-pong/) was more involved than I anticipated.
+This week's [Riddler Express](https://fivethirtyeight.com/features/the-riddler-just-had-to-go-and-reinvent-beer-pong/) was more involved than I anticipated.
 
 The World Chess Championship is [underway](https://fivethirtyeight.com/tag/chess/). We need to find the odds that the better player wins a 12-game match, given: 
 
