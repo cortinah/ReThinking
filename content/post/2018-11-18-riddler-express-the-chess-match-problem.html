@@ -1,0 +1,52 @@
+---
+title: 'Riddler Express: The Chess Match Problem'
+author: Hernando Cortina
+date: '2018-11-18'
+slug: riddler-express-the-chess-match-problem
+categories:
+  - R
+tags:
+  - Riddler
+  - Math
+---
+
+
+
+<div id="the-problem" class="section level3">
+<h3>The Problem</h3>
+<p>This week’s <a href="https://fivethirtyeight.com/features/the-riddler-just-had-to-go-and-reinvent-beer-pong/">Riddler Classic</a> was more involved than I anticipated.</p>
+<p>The World Chess Championship is <a href="https://fivethirtyeight.com/tag/chess/">underway</a>. We need to find the odds that the better player wins a 12-game match, given:</p>
+<p><em>One of the players is better than his opponent to the degree that he wins 20% of all games, loses 15%, and 65% of games are drawn. Wins are worth 1 point, draws 0.5 for each player, and losses 0 points. In a 12-game match, the first player to earn 6.5 points wins.</em></p>
+<p><em>How many games would a match have to be in order to give the better player a 75% chance of winning the match outright? A 90% chance? A 99% chance?</em></p>
+</div>
+<div id="approach" class="section level3">
+<h3>Approach</h3>
+<p>The approach is to count all of the ways the player can win the match, the probability of each of the win scenarios, and sum the product of these two across all possible wins. It helps to illustrate this with a table for the 12-game match case:</p>
+<p><img src="/post/2018-11-18-riddler-express-the-chess-match-problem_files/Screen%20Shot%202018-11-18%20at%2011.34.45%20PM.png" width="800" height="400" /></p>
+<p>Where W is # of games won, D is # of draws, and L # of losses. For example, the player can win the match with 10 wins, 1 draw, and 1 loss, or 4 wins, 6 draws and 2 losses.</p>
+<p>To obtain the probability of each of these win scenarios, we count the number of ways it can occur times its probability. Specifically:</p>
+<p><span class="math display">\[
+P= \binom{12}{win} \binom{12-win}{draw} 0.20^{win} 0.15^{lose}0.65^{draw}
+\]</span></p>
+<p>I initially did the calculation on a spreadsheet and obtained 0.5198 as the answer, but using a spreadsheet doesn’t work for the second part of the problem.</p>
+<p><img src="/post/2018-11-18-riddler-express-the-chess-match-problem_files/Screen%20Shot%202018-11-18%20at%2011.56.13%20PM.png" width="1200" height="380" /></p>
+</div>
+<div id="finding-the-number-of-games-in-a-match-such-that-p-alpha" class="section level2">
+<h2>Finding the number of games in a match such that P &gt; alpha</h2>
+<p>With a 12-game match the stronger player can only be expected to win around the match 52% of the time, because his chess ability advantage is relatively small. This is unsatisfying because the stronger chess player will still lose the match nearly half of the time due to randomness. (PS: that’s also my excuse when my king falls.)</p>
+<p>Accordingly, how many games does it take for the better player to win 75%, 90%, and 99% of the time. I coded a function in R to calculate this, which is available <a href="https://github.com/cortinah/riddler/blob/master/riddler_classic_chess_master.R">here</a>.</p>
+<p>The function performs the same calculation as the spreadsheet, for any even number of games.</p>
+<p>We test that we obtain the same answer as the spreadsheet for 12 games:</p>
+<pre class="r"><code>chess(12)</code></pre>
+<p>[1] 0.5198</p>
+<p>With a little trial and error, we find the number of games for 75%, 90%, and 99% probability the better player wins:</p>
+<pre class="r"><code>chess(82)</code></pre>
+<p>[1] 0.7503</p>
+<pre class="r"><code>chess(248)</code></pre>
+<p>[1] 0.9001</p>
+<pre class="r"><code>chess(772)</code></pre>
+<p>[1] 0.99</p>
+<p>Which we can also illustrate with a graph showing the large number of games necessary to obtain a high degree of confidence that the results of a match were not a fluke!</p>
+<p><img src="/post/2018-11-18-riddler-express-the-chess-match-problem_files/chessmatch.png" width="800" /></p>
+<p>Now let’s get back to Carlsen-Caruana.</p>
+</div>

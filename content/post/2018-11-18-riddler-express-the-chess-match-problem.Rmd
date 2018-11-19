@@ -1,0 +1,142 @@
+---
+title: 'Riddler Express: The Chess Match Problem'
+author: Hernando Cortina
+date: '2018-11-18'
+slug: riddler-express-the-chess-match-problem
+categories:
+  - R
+tags:
+  - Riddler
+  - Math
+---
+### The Problem
+
+This week's [Riddler Classic](https://fivethirtyeight.com/features/the-riddler-just-had-to-go-and-reinvent-beer-pong/) was more involved than I anticipated.
+
+The World Chess Championship is [underway](https://fivethirtyeight.com/tag/chess/). We need to find the odds that the better player wins a 12-game match, given: 
+
+*One of the players is better than his opponent to the degree that he wins 20% of all games, loses 15%, and 65% of games are drawn. Wins are worth 1 point, draws 0.5 for each player, and losses 0 points. In a 12-game match, the first player to earn 6.5 points wins.*
+
+*How many games would a match have to be in order to give the better player a 75% chance of winning the match outright? A 90% chance? A 99% chance?*
+
+### Approach
+
+The approach is to count all of the ways the player can win the match, the probability of each of the win scenarios, and sum the product of these two across all possible wins.  It helps to illustrate this with a table for the 12-game match case:
+
+![](/post/2018-11-18-riddler-express-the-chess-match-problem_files/Screen Shot 2018-11-18 at 11.34.45 PM.png){width=800px height=400px}
+
+Where W is # of games won, D is # of draws, and L # of losses. For example, the player can win the match with 10 wins, 1 draw, and 1 loss,  or 4 wins, 6 draws and 2 losses.
+
+To obtain the probability of each of these win scenarios, we count the number of ways it can occur times its probability.  Specifically:
+
+$$
+P= \binom{12}{win} \binom{12-win}{draw} 0.20^{win} 0.15^{lose}0.65^{draw}
+$$
+
+I initially did the calculation on a spreadsheet and obtained 0.5198 as the answer, but using a spreadsheet doesn't work for the second part of the problem.
+
+![](/post/2018-11-18-riddler-express-the-chess-match-problem_files/Screen Shot 2018-11-18 at 11.56.13 PM.png){width=1200px height=380px}
+
+## Finding the number of games in a match such that P > alpha
+With a 12-game match the stronger player can only be expected to win around the match 52% of the time, because his chess ability advantage is relatively small. This is unsatisfying because the stronger chess player will still lose the match nearly half of the time due to randomness.  (PS: that's also my excuse when my king falls.)
+
+Accordingly, how many games does it take for the better player to win 75%, 90%, and 99% of the time.  I coded a function in R to calculate this, which is available [here](https://github.com/cortinah/riddler/blob/master/riddler_classic_chess_master.R).
+
+The function performs the same calculation as the spreadsheet, for any even number of games.
+
+```{r function, echo=FALSE}
+knitr::opts_chunk$set(results = 'asis')
+options(digits=4)
+
+chess <- function(games) {
+  
+  if ((games %% 2) != 0) stop('Must be even integer')
+  
+  min_points <- (games/2)+0.5
+  
+  i <- min_points
+  points <- vector(mode='numeric', length=1)
+  vec_index <- 1
+  
+  while (games >= i) {
+    points[vec_index] <- i
+    i <- i+0.5
+    vec_index <- vec_index+1
+      }
+  
+  numrows <- length(points); numcols <- floor(min_points)
+  combos <- matrix(NA, nrow=numrows, ncol=numcols*3)
+  rownames(combos) <- rev(points)
+  
+  i <- 1; draw <- 1; wins <- numcols
+  while (i <= numcols*3) {
+    
+    combos[numrows, i] <- wins; wins <- wins-1; i <- i+1
+    combos[numrows, i] <- draw; draw <- draw+2; i <- i+1
+    combos[numrows, i] <- (games - combos[numrows, i-1] - combos[numrows, i-2]); i <- i+1
+  }
+  for (i in 1:numcols) {
+    j <- numrows-1
+    while (j>=1) {
+      
+      combos[j, i*3] <- combos[j+1, i*3]
+      j <- j-1
+      combos[j, i*3] <- ifelse( (combos[j+1, i*3]-1)>=0, combos[j+1, i*3]-1, NA)
+      j <- j-1
+    }
+  }
+  
+  for (i in 1:numcols) {
+    j <- numrows-1
+    while (j>=1) {
+      
+      combos[j, i*3-2] <- ifelse (!is.na(combos[j, i*3]), (combos[j+1, i*3-2]+1), NA)
+      j <- j-1
+      combos[j, i*3-2] <- ifelse (!is.na(combos[j, i*3]), combos[j+1, i*3-2], NA)
+      j <- j-1
+    }
+  }
+  
+  for (i in 1:numcols) {
+    j <- numrows-1
+    while (j>=1) {
+      
+      combos[j, i*3-1] <- games - combos[j, i*3-2] - combos[j, i*3]
+      j <- j-1
+      }
+  }
+    
+  proba <- matrix(NA, nrow=numrows, ncol=numcols)
+  
+  for (i in 1:numcols) {
+    j <- numrows
+    while (j>=1) {
+      
+      proba[j, i] <- choose(games, combos[j, i*3-2]) * (0.2^combos[j, i*3-2]) * (0.65^combos[j, i*3-1]) * (0.15^combos[j, i*3]) *
+                     choose(games-combos[j, i*3-2], combos[j, i*3-1])
+      j <- j-1
+    }
+  }
+  
+  sum(proba, na.rm = T)
+}
+```
+
+We test that we obtain the same answer as the spreadsheet for 12 games:
+```{r results}
+chess(12)
+```
+
+With a little trial and error, we find the number of games for 75%, 90%, and 99% probability the better player wins:
+
+```{r results2}
+chess(82)
+chess(248)
+chess(772)
+```
+
+Which we can also illustrate with a graph showing the large number of games necessary to obtain a high degree of confidence that the results of a match were not a fluke!
+
+![](/post/2018-11-18-riddler-express-the-chess-match-problem_files/chessmatch.png){width=800px}
+
+Now let's get back to Carlsen-Caruana.
