@@ -64,3 +64,5 @@ sled(18)
 ```
 
 [1] 94.5
+
+Extra credit question: What can Santa do to finish faster? Santa could try what I call the "Mastermind" strategy. That is, start by harnessing all eight deer at once, check each deer's position, and then repeat until all are correctly placed.  While harnessing all eight at once will take eight minutes, this strategy, should, in the worst case, have the same expected time as the above strategy.  However, there is a non-zero chance that Santa will randomly place multiple deer correctly in every round, thus reducing the overall setup time.
