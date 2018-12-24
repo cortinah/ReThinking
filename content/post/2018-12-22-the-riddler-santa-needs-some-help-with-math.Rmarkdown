@@ -34,7 +34,7 @@ The product of the fractions can be simplified and solved directly. However, to 
 
 ```{r sledcode, results='asis'}
 
-raindeer <- function(N) {
+reindeer <- function(N) {
   if (N==2) return(3/2)
   if (N==1) return(1) 
   n <- N
@@ -49,7 +49,7 @@ raindeer <- function(N) {
   T
 }
 
-sled <- function(N) sum(sapply(1:N, raindeer))
+sled <- function(N) sum(sapply(1:N, reindeer))
 
 sled(8)
 ```
@@ -92,14 +92,14 @@ results <- santa_list(max_list=8000)
 ggplot(results, aes(x=length, y=prob)) +geom_line(alpha=0.8, color='red2') +
   theme_bw(base_size = 14) +
   scale_y_continuous(breaks=seq(0.4,1,.1),lim=c(0.4,1)) +
-    labs(y='Probability of Repeating Song', x="Length of Santa's Playlist",
+    labs(y='Probability of Repeating a Song', x="Length of Santa's Playlist",
          title='Riddler Classic: Santa Needs Some Help With Math', 
          subtitle='20,000 replications of every indicated playlist length',
          caption='by @cortinah, 12/23/2018') +
   geom_hline(yintercept = 0.5, color='dodgerblue', size=2, linetype=5)
 ```
 
-<img src="/post/2018-12-22-the-riddler-santa-needs-some-help-with-math_files/santaplaylist.png" alt="" width="800px"/>
+<img src="/post/2018-12-22-the-riddler-santa-needs-some-help-with-math_files/santaplaylist.png" alt="" width="850px"/>
 
 Examining the results of the simulation, we notice that the curve crosses the P=1/2 line near l=7,150.  However, this is an approximate value subject to the randomness in our simulation. We can use this value to help us find an exact solution to equation (1) above. Using [Wolfram Alpha](https://www.wolframalpha.com/) we quickly find that the closest integer solution with P=1/2 is 7,174.  That is the length of Santa's playlist.
 
