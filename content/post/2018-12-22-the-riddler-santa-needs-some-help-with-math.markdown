@@ -107,4 +107,4 @@ ggplot(results, aes(x=length, y=prob)) +geom_line(alpha=0.8, color='red2') +
 <img src="/post/2018-12-22-the-riddler-santa-needs-some-help-with-math_files/santasplaylist.png" alt="" width="900px"/>
 
 Examining the results of the simulation, we notice that the curve crosses the P=1/2 line near l=7,150.  However, this is an approximate value subject to the randomness in our simulation. We can use this value to help us find an exact solution to equation (1) above. Using [Wolfram Alpha](https://www.wolframalpha.com/) we quickly find that the closest integer solution with P=1/2 is 7,175.  That is the length of Santa's playlist.
-<img src="/post/2018-12-22-the-riddler-santa-needs-some-help-with-math_files/riddlersantaalpha.png" alt="" width="900px"/>
+<img src="/post/2018-12-22-the-riddler-santa-needs-some-help-with-math_files/riddlersantaalpha75.png" alt="" width="900px"/>
