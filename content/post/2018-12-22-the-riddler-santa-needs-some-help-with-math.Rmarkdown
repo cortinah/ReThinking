@@ -66,7 +66,7 @@ sled(18)
 How long is Santa's music playlist if in a random 100-song sequence the probability of repeating a song is 1/2 ?  The reader may observe that this question is a variation of the classic [birthday problem](https://en.wikipedia.org/wiki/Birthday_problem) in probability.  In this instance, instead of 365 days we have a playlist of unknown length l.  Furthermore, instead of a group of n people, we have a playlist of 100 songs. Accordingly, following the birthday problem's solution, the length of Santa's playlist l must satisfy:
 
 $$
-P=\frac{l!}{l^{100}\cdot (l-100)!)}=\frac{1}{2} \qquad \qquad (1)
+P=\frac{l!}{l^{100}\cdot (l-100)!}=\frac{1}{2} \qquad \qquad (1)
 $$
 
 An alternative empirical approach to solving this problem is a Monte Carlo simulation of the daily playlist, counting the number of times a song is repeated for a playlists of varying lengths.  This will not provide an exact solution, but an approximation of the range.  We do this as follows, which produces the chart below, based on 20,000 simulations of playlists of lengths 1 to 8,000:
