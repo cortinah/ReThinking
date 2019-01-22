@@ -1,0 +1,200 @@
+---
+title: 'Climate change: Modeling 140+ years of temperature data with tsibble and fable'
+author: Hernando Cortina
+date: '2019-01-21'
+categories:
+  - ESG
+tags:
+  - climate
+  - tsibble
+slug: 140-years
+---
+
+
+
+<div id="background-to-this-post-rstudioconf-2019" class="section level1">
+<h1>Background to this post: rstudio::conf 2019</h1>
+<p>I had the wonderful opportunity to attend RStudio’s annual <a href="https://www.rstudio.com/conference/">conference</a> in Austin, Texas last week, supported by a generous <a href="https://blog.rstudio.com/2018/08/10/rstudio-conf-2019-diversity-scholarships/">grant</a> from RStudio. While I can’t possibly write about all of the incredible people I met and excellent presentations I saw, I’d like to share some of what I learned through a pair of blog posts, the first one focused on the new time-series infrastructure <a href="https://github.com/tidyverts">“tidyverts”</a> of tidy R packages for time series analysis. The second will be on the machine learning workshop I attended. The tidyverts effort is led by <a href="https://robjhyndman.com/hyndsight/">Rob Hyndman</a> and a team of highly skilled R statisticians. <a href="https://earo.me/">Earo Wang</a> gave a lively and informative <a href="https://slides.earo.me/rstudioconf19">presentation</a> regarding the <a href="https://pkg.earo.me/tsibble/">tsibble package</a>, which introduces a new class of tidy time series objects, as well as the <a href="https://github.com/tidyverts/fable">fable package</a> which will in time include all of the time series models from the forecast package. While tsibble is currently on CRAN, fable is at an earlier stage of development and only available on github. Earo’s great talk inspired me to try out the packages using a dataset of temperature data that has been consistently gathered at Kremsmünster Abbey in Austria since 1876. It’s considered to be one of the highest quality long-running instrumental temperature records, and provides in my opinion some startling evidence of how anthropogenic climate change has already had a major impact. It also provides an opportunity to try out the tidyverts packages.</p>
+</div>
+<div id="introduction-the-instrumental-climate-record" class="section level1">
+<h1>Introduction: The instrumental climate record</h1>
+<p>I became aware of the Kremsmünster temperature data through this <a href="https://tamino.wordpress.com/2018/12/26/freezy-hot-climate-change/">blog post</a> by Tamino, a climate scientist I frequently read. In that post Tamino visualized the Kremsmünster data, and I thought it would be great to attempt to replicate that analysis, add some ggplot goodness, run some forecasts, and post the code to make it replicable. Note that I am not a climate scientist and the forecasts are only here to try out the fable package, and certainly don’t incorporate any atmospheric climate modeling. Here is a helpful <a href="https://www.univie.ac.at/pluslucis/FBW0/FBW2010/Material/2009-09-04-Boehm-etal-CLIMCHANGE.pdf">academic reference Bömh (2009)</a> which provides much detail on Kremsmünster, and notes that “The original measuring site at the NNE-facing wall of the astronomical tower of the Benedictine monastery in Upper Austria is trustworthy and reported to be unchanged from the start of the record in March 1767 until now”. Unfortunately, I was not able to obtain the data going back to 1767, but through the <a href="https://www.ecad.eu">European Climate Assessment &amp; Dataset project</a>, daily temperatures going back to 1876 can be downloaded. ECA&amp;D provide the data in two large .zip files (one for daily high and the other for the daily low) that include hundreds of monitoring stations. The R code below shows how to extract the Kremsmünster data from the two large ECA&amp;D .zip files.</p>
+<p><img src="/post/2019-01-21-140-years/index_files/Kremsmuenster_Abbey_Northeast.png" alt="Kremsmünster Abbey" width="900px"/>
+Kremsmünster Abbey, Austria</p>
+<div id="exploring-climate-change-temperature-anomalies-fewer-freezing-days-more-hot-days" class="section level2">
+<h2>Exploring climate change: temperature anomalies, fewer freezing days, more hot days</h2>
+<div id="load-packages-install-fable-if-needed" class="section level3">
+<h3>Load packages, install fable if needed</h3>
+<p>This section loads the required CRAN packages and installs fable from github.</p>
+<pre class="r"><code>library(tsibble)
+library(tidyverse)
+library(lubridate)
+library(magrittr)
+library(patchwork)
+if (!&#39;fable&#39; %in% installed.packages()) 
+   devtools::install_github(&quot;tidyverts/fable&quot;)
+library(fable)</code></pre>
+</div>
+<div id="download-ecad-daily-max-and-daily-min-temperature-datasets" class="section level3">
+<h3>Download ECA&amp;D daily max and daily min temperature datasets</h3>
+<p>This section downloads the temperature zip files and extracts the Kremsmünster data. Unfortunately it will be slow the first time it is run due to the large (775 Mb total) files.</p>
+<pre class="r"><code>mintempfile &lt;- &#39;./data.ECAD/ECA_blend_tn/TN_STAID000011.txt&#39;  
+fileURL &lt;- &#39;https://www.ecad.eu//utils/downloadfile.php?file=download/ECA_blend_tn.zip&#39;
+ 
+if (!file.exists(mintempfile)) {
+    download.file(fileURL, destfile=&quot;./ECA_blend_tn.zip&quot;, method=&quot;auto&quot;)
+    unzip(&#39;ECA_blend_tn.zip&#39;, files=&#39;TN_STAID000011.txt&#39;, exdir=&#39;./data.ECAD/ECA_blend_tn/&#39;) }
+
+maxtempfile &lt;- &#39;./data.ECAD/ECA_blend_tx/TX_STAID000011.txt&#39;  
+fileURL &lt;- &#39;https://www.ecad.eu//utils/downloadfile.php?file=download/ECA_blend_tx.zip&#39; 
+ 
+if (!file.exists(maxtempfile)) {
+    download.file(fileURL, destfile=&quot;./ECA_blend_tx.zip&quot;, method=&quot;auto&quot;)
+    unzip(&#39;ECA_blend_tx.zip&#39;, files=&#39;TX_STAID000011.txt&#39;, exdir=&#39;./data.ECAD/ECA_blend_tx/&#39;) }</code></pre>
+</div>
+<div id="wrangle-temperatures-into-tsibbles-and-add-daily-mean" class="section level3">
+<h3>Wrangle temperatures into tsibbles and add daily mean</h3>
+<p>This chunk extracts the needed columns from the files, removes missing or “suspect” quality observations based on codes provided, converts temperatures to degrees Celsius, and creates the tsibbles. We plot a recent subset of the data as a check.</p>
+<pre class="r"><code>raw &lt;- read_csv(&#39;./data.ECAD/ECA_blend_tn/TN_STAID000011.txt&#39;, skip=20)
+raw %&lt;&gt;% select(-STAID, -SOUID) %&gt;% rename(date=DATE, min_temp=TN, qual=Q_TN)
+raw %&lt;&gt;% mutate(min_temp = replace(min_temp, min_temp &lt;= -9999, NA)) %&gt;%
+         mutate(min_temp = replace(min_temp, qual==1 | qual==9, NA))
+raw %&lt;&gt;% mutate(min_temp = min_temp*0.1, date = ymd(date)) %&gt;% select(-qual)
+min_temp &lt;- raw %&gt;% as_tsibble(index=date)
+
+raw &lt;- read_csv(&#39;./data.ECAD/ECA_blend_tx/TX_STAID000011.txt&#39;, skip=20)
+raw %&lt;&gt;% select(-STAID, -SOUID) %&gt;% rename(date=DATE, max_temp=TX, qual=Q_TX)
+raw %&lt;&gt;% mutate(max_temp = replace(max_temp, max_temp &lt;= -9999, NA)) %&gt;%
+         mutate(max_temp = replace(max_temp, qual==1 | qual==9, NA))
+raw %&lt;&gt;% mutate(max_temp=max_temp*0.1, date = ymd(date)) %&gt;% select(-qual)
+max_temp &lt;- raw %&gt;% as_tsibble(index=date)
+
+krem &lt;- left_join(min_temp, max_temp)
+rm(max_temp, min_temp, raw)
+
+krem %&lt;&gt;% mutate(month = month(date), mean_temp = (max_temp + min_temp)/2 )
+
+theme_set(theme_bw(base_size = 14))
+
+ggplot(krem, aes(x=date, y=mean_temp)) +geom_line(alpha=0.8)  +
+  scale_x_date(&#39;Year&#39;, limits=c(as.Date(&#39;2001-01-01&#39;), as.Date(&#39;2019-01-01&#39;)), date_breaks=&#39;5 years&#39;, date_labels = &quot;%Y&quot;) +
+  scale_y_continuous(&#39;Mean Temperature Cº&#39;, limits=c(-20, 30), breaks=seq(-20, 30, 10))  +
+  geom_smooth(size=1.2, color=&#39;orange&#39;) + geom_hline(yintercept=0,color=&#39;dodgerblue&#39;,linetype=2,size=1.5) +
+  labs(title=&#39;Kremsmünster, Austria: 2001-2018 Daily Mean Temperature and Loess Trend&#39;, caption=&#39;Source: https://www.ecad.eu/&#39;)</code></pre>
+<p><img src="/post/2019-01-21-140-years/index_files/figure-html/read-1.png" width="912" /></p>
+</div>
+<div id="visualize-monthly-temperature-ranges-for-different-periods" class="section level3">
+<h3>Visualize monthly temperature ranges for different periods</h3>
+<pre class="r"><code>krem_narrow &lt;- gather(krem, key=&#39;type&#39;, value=&#39;Temp&#39;, min_temp, max_temp, mean_temp) %&gt;% as_tibble()
+krem_range &lt;- krem_narrow %&gt;% group_by(type, month) %&gt;% summarize(mean=mean(Temp,na.rm=T), max=max(Temp,na.rm=T), min=min(Temp,na.rm=T))
+months &lt;- c(&#39;Jan&#39;,&#39;Feb&#39;,&#39;Mar&#39;,&#39;Apr&#39;,&#39;May&#39;,&#39;Jun&#39;,&#39;Jul&#39;,&#39;Aug&#39;,&#39;Sep&#39;,&#39;Oct&#39;,&#39;Nov&#39;,&#39;Dec&#39;)
+
+ggplot(krem_range, aes(x=month, y=mean, color=type)) +
+  geom_pointrange(data=subset(krem_range, type==&#39;min_temp&#39;), aes(ymin=min, ymax=max)) +
+  geom_pointrange(data=subset(krem_range, type==&#39;max_temp&#39;), aes(ymin=min, ymax=max), position=position_nudge(0.2)) +
+  scale_x_continuous(&#39;Month&#39;,breaks=1:12,labels=months) +
+  scale_y_continuous(&#39;Temperature Cº&#39;, breaks=seq(-25,35,5)) +scale_color_discrete(breaks=c(&#39;max_temp&#39;,&#39;min_temp&#39;),labels=c(&#39;Daily high&#39;,&#39;Daily low&#39;)) +
+  guides(color=guide_legend(title = &quot;Range&quot;)) + theme(legend.position = c(0.12,0.88)) +
+  geom_line(data=subset(krem_range, type==&#39;min_temp&#39;)) +geom_line(data=subset(krem_range, type==&#39;max_temp&#39;), position=position_nudge(0.2)) +
+  labs(title=&#39;Kremsmünster, Austria: 1876-2018 Temperature Range&#39;, caption=&#39;Source: https://www.ecad.eu/&#39;)</code></pre>
+<p><img src="/post/2019-01-21-140-years/index_files/figure-html/monthly-1.png" width="912" /></p>
+<p><img src="/post/2019-01-21-140-years/index_files/figure-html/periods-1.png" width="912" /></p>
+</div>
+<div id="temperature-anomaly-based-on-100-year-average" class="section level3">
+<h3>Temperature anomaly based on 100-year average</h3>
+<pre class="r"><code>krem_narrow %&lt;&gt;% mutate(day=yday(date))
+krem_range &lt;- krem_narrow %&gt;% filter(type==&#39;mean_temp&#39;, date &lt; as.Date(&#39;1976-01-01&#39;)) %&gt;% group_by(day) %&gt;% summarize(centurymean=mean(Temp, na.rm=T))
+
+anomaly &lt;- krem_narrow %&gt;% filter(type==&#39;mean_temp&#39;) %&gt;% left_join(krem_range) %&gt;% mutate(anomaly=Temp-centurymean) %&gt;% select(date, anomaly)
+
+anomaly %&lt;&gt;% mutate(year = year(date)) %&gt;% as_tsibble(index=date) %&gt;%
+             index_by(year) %&gt;% summarize(anom=mean(anomaly, na.rm=T))
+
+ggplot(anomaly, aes(x=year, y=anom)) +geom_line(alpha=0.8)  +
+  scale_x_continuous(&#39;Year&#39;, breaks=seq(1880, 2020, 20)) +
+  scale_y_continuous(&#39;Temperature Anomaly Cº&#39;, limits=c(-2, 4), breaks=seq(-2, 4, 0.5))  +
+  geom_smooth(size=1.5, color=&#39;red&#39;) + geom_hline(yintercept=0,color=&#39;dodgerblue&#39;,linetype=2,size=2) +
+  labs(title=&#39;Kremsmünster, Austria: 1876-2018 Temperature Anomaly&#39;, subtitle = &#39;Baseline period: 1876-1976. Loess trend in red.&#39;,
+          caption=&#39;Source: https://www.ecad.eu/&#39;)</code></pre>
+<p><img src="/post/2019-01-21-140-years/index_files/figure-html/anom-1.png" width="912" /></p>
+</div>
+<div id="freezing-days" class="section level3">
+<h3>Freezing days</h3>
+<pre class="r"><code>krem_narrow %&lt;&gt;% mutate(year=year(date), winter=ifelse(month&gt;6, 1, 0)) %&gt;%
+  mutate(year=year+winter) %&gt;% select(-winter)
+krem_high &lt;- krem_narrow %&gt;% filter(type==&#39;max_temp&#39;) %&gt;% select(date, Temp, year)
+krem_narrow %&lt;&gt;% filter(type==&#39;mean_temp&#39;) %&gt;% select(date, Temp, year)
+
+num_freeze_days &lt;- krem_narrow %&gt;% group_by(year) %&gt;% filter(Temp&lt;=0) %&gt;% summarize(num_freezing=n()) 
+num_freeze_days %&lt;&gt;% filter(year&lt;=2018) %&gt;% as_tsibble(index=year) %&gt;% fill_na()
+
+ggplot(num_freeze_days, aes(x=year, y=num_freezing)) +geom_line(alpha=0.8)  +
+  scale_x_continuous(&#39;Year&#39;, breaks=seq(1880, 2020, 20)) +
+  scale_y_continuous(&#39;Number of Freezing Days&#39;, limits=c(0, 110), breaks=seq(0, 110, 20))  +
+  geom_smooth(size=1.5, color=&#39;dodgerblue&#39;) +
+  labs(title=&#39;Kremsmünster, Austria: 1876-2017 Number of Freezing Days&#39;, subtitle = &#39;Number of days per year with daily mean temp &lt; 0 Cº. Loess trend in blue.&#39;,
+       caption=&#39;Source: https://www.ecad.eu/&#39;)</code></pre>
+<p><img src="/post/2019-01-21-140-years/index_files/figure-html/freeze-1.png" width="912" /></p>
+</div>
+<div id="hot-days" class="section level3">
+<h3>Hot days</h3>
+<pre class="r"><code>num_hot_days &lt;- krem_high %&gt;% group_by(year) %&gt;% filter(Temp &gt;= 30) %&gt;%
+                summarize(num_hot=n()) %&gt;% as_tsibble(index=year) %&gt;% fill_gaps() %&gt;%
+                replace_na(list(num_hot=0)) 
+
+ggplot(num_hot_days, aes(x=year, y=num_hot)) +geom_line(alpha=0.7)  +
+  scale_x_continuous(&#39;Year&#39;, breaks=seq(1880,2020,20)) +
+  scale_y_continuous(&#39;Number of Hot Days&#39;, limits=c(0, 40), breaks=seq(0, 40, 10) , oob=scales::rescale_none)  +
+  geom_smooth(size=1.5, color=&#39;red&#39;) +
+  labs(title=&#39;Kremsmünster, Austria: 1876-2018 Number of Hot Days&#39;, subtitle = &#39;Number of days per year with daily high temp &gt;= 30 Cº. Loess trend in red&#39;,
+       caption=&#39;Source: https://www.ecad.eu/&#39;)</code></pre>
+<p><img src="/post/2019-01-21-140-years/index_files/figure-html/hot-1.png" width="912" /></p>
+</div>
+<div id="annual-excess-degrees" class="section level3">
+<h3>Annual “excess degrees”</h3>
+<pre class="r"><code>excess_degrees &lt;- krem_high %&gt;% mutate(excess_heat=ifelse(Temp-30 &gt; 0, Temp-30, 0)) %&gt;% group_by(year) %&gt;% summarize(excess_degrees_total=sum(excess_heat)) %&gt;%
+                  as_tsibble(index=year) %&gt;% fill_gaps() %&gt;% replace_na(list(excess_degrees_total=0)) %&gt;% filter(year&lt;=2018)
+
+ggplot(excess_degrees, aes(x=year, y=excess_degrees_total)) +geom_line(alpha=0.7)  +
+  scale_x_continuous(&#39;Year&#39;, breaks=seq(1880, 2020, 20)) +
+  scale_y_continuous(&#39;Annual Excess Degrees&#39;, limits=c(0, 140), breaks=seq(0, 140, 20), oob=scales::rescale_none) +
+  geom_smooth(size=1.5, color=&#39;red&#39;) +
+  labs(title=&quot;Kremsmünster, Austria: 1876-2018 Annual Sum of &#39;Excess Degree&#39; Days&quot;, subtitle = &#39;Annual sum of (daily high - 30 Cº). Loess trend in red&#39;,
+       caption=&#39;Source: https://www.ecad.eu/&#39;)</code></pre>
+<p><img src="/post/2019-01-21-140-years/index_files/figure-html/excess-1.png" width="912" /></p>
+</div>
+</div>
+<div id="forecasting-with-fable" class="section level2">
+<h2>Forecasting with Fable</h2>
+<div id="forecasting-temperature-anomaly-with-ets-model" class="section level3">
+<h3>Forecasting temperature anomaly with ETS model</h3>
+<pre class="r"><code>anomaly_model &lt;- anomaly %&gt;% model(ets=ETS(anom))
+anomaly_fbl &lt;- anomaly_model %&gt;%  forecast(h = &quot;10 years&quot;)
+anomaly_fbl &lt;- fortify(anomaly_fbl,level=80)
+
+p1 &lt;- ggplot(anomaly, aes(x=year, y=anom)) +geom_line(alpha=0.8)  +
+  scale_x_continuous(&#39;Year&#39;, breaks=seq(1880, 2020, 20)) + geom_hline(yintercept=0,linetype=2,color=&#39;dodgerblue&#39;,size=2)+
+  scale_y_continuous(&#39;Temperature Anomaly Cº&#39;, limits=c(-2, 5), breaks=seq(-2, 5, 0.5))  +
+  labs(title=&#39;Kremsmünster, Austria: 1876-2018 Temperature Anomaly&#39;, subtitle = &#39;10-year ETS forecast in red, 80% confidence interval shaded.&#39;, caption=&#39;Source: https://www.ecad.eu/ Forecasts by @cortinah&#39;)
+
+p1 + geom_smooth(aes(x=year, y=anom, ymax=upper, ymin=lower), size=1.5,
+                 color=&#39;red&#39;, fill=&#39;dodgerblue&#39;, data=anomaly_fbl, stat=&#39;identity&#39;)</code></pre>
+<p><img src="/post/2019-01-21-140-years/index_files/figure-html/fable-1.png" width="912" /></p>
+</div>
+<div id="forecasting-number-of-hot-days-with-a-random-walk-model" class="section level3">
+<h3>Forecasting number of hot days with a random walk model</h3>
+<pre class="r"><code>hotday_model &lt;- num_hot_days %&gt;% model(ets=RW(num_hot ~ drift()))
+hotday_fbl &lt;- hotday_model %&gt;%  forecast(h = &quot;10 years&quot;)
+hotday_fbl &lt;- fortify(hotday_fbl,level=80)
+
+p1 &lt;- ggplot(num_hot_days, aes(x=year, y=num_hot)) +geom_line(alpha=0.7)  +
+  scale_x_continuous(&#39;Year&#39;, breaks=seq(1880,2020,20)) +
+  scale_y_continuous(&#39;Number of Hot Days&#39;, limits=c(0, 50), breaks=seq(0, 50, 10) , oob=scales::rescale_none)  +
+  labs(title=&#39;Kremsmünster, Austria: 1876-2018 Number of Hot Days&#39;, subtitle = &#39;10-year random walk forecast in red, 80% confidence interval shaded.&#39;, caption=&#39;Source: https://www.ecad.eu/ Forecasts by @cortinah&#39;)
+
+p1 + geom_smooth(aes(x=year, y=num_hot, ymax=upper, ymin=lower), size=1.5,
+                 color=&#39;red&#39;, fill=&#39;dodgerblue&#39;, data=hotday_fbl, stat=&#39;identity&#39;)</code></pre>
+<p><img src="/post/2019-01-21-140-years/index_files/figure-html/fable2-1.png" width="912" /></p>
+</div>
+</div>
+</div>
