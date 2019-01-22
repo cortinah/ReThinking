@@ -78,13 +78,15 @@ theme_set(theme_bw(base_size = 14))
 
 ggplot(krem, aes(x=date, y=mean_temp)) +geom_line(alpha=0.8)  +
   scale_x_date('Year', limits=c(as.Date('2001-01-01'), as.Date('2019-01-01')), date_breaks='5 years', date_labels = "%Y") +
-  scale_y_continuous('Mean Temperature Cº', limits=c(-20, 30), breaks=seq(-20, 30, 10))  +
+  scale_y_continuous('Mean Temperature ºC', limits=c(-20, 30), breaks=seq(-20, 30, 10))  +
   geom_smooth(size=1.2, color='orange') + geom_hline(yintercept=0,color='dodgerblue',linetype=2,size=1.5) +
   labs(title='Kremsmünster, Austria: 2001-2018 Daily Mean Temperature and Loess Trend', caption='Source: https://www.ecad.eu/')
 ```
 
 
 ### Visualize monthly temperature ranges for different periods
+We start the EDA by looking at the range of daily highs/lows by month. First we look at the full 142 years, and below we break it down into the 1876-2000 and 2000-2018 periods. The overall seasonality looks as expected, but we can see that the winters in recent years have become less cold, and the summers warmer. While winter lows in the -25 to -20 range occurred in the earlier period, more recent winter lows are near -15. Furthermore, the daily high curve has shifted higher and 30-35 degree highs are more common.
+
 ```{r monthly, message=F, warning=F, error=F, fig.width=9.5, fig.height=6}
 krem_narrow <- gather(krem, key='type', value='Temp', min_temp, max_temp, mean_temp) %>% as_tibble()
 krem_range <- krem_narrow %>% group_by(type, month) %>% summarize(mean=mean(Temp,na.rm=T), max=max(Temp,na.rm=T), min=min(Temp,na.rm=T))
@@ -94,7 +96,7 @@ ggplot(krem_range, aes(x=month, y=mean, color=type)) +
   geom_pointrange(data=subset(krem_range, type=='min_temp'), aes(ymin=min, ymax=max)) +
   geom_pointrange(data=subset(krem_range, type=='max_temp'), aes(ymin=min, ymax=max), position=position_nudge(0.2)) +
   scale_x_continuous('Month',breaks=1:12,labels=months) +
-  scale_y_continuous('Temperature Cº', breaks=seq(-25,35,5)) +scale_color_discrete(breaks=c('max_temp','min_temp'),labels=c('Daily high','Daily low')) +
+  scale_y_continuous('Temperature ºC', breaks=seq(-25,35,5)) +scale_color_discrete(breaks=c('max_temp','min_temp'),labels=c('Daily high','Daily low')) +
   guides(color=guide_legend(title = "Range")) + theme(legend.position = c(0.12,0.88)) +
   geom_line(data=subset(krem_range, type=='min_temp')) +geom_line(data=subset(krem_range, type=='max_temp'), position=position_nudge(0.2)) +
   labs(title='Kremsmünster, Austria: 1876-2018 Temperature Range', caption='Source: https://www.ecad.eu/')
@@ -107,7 +109,7 @@ krem_range <- krem_narrow %>% filter(date < as.Date('2000-01-01')) %>% group_by(
 p1 <- ggplot(krem_range, aes(x=month, y=mean, color=type)) +
   geom_pointrange(data=subset(krem_range, type=='min_temp'), aes(ymin=min, ymax=max)) +
   geom_pointrange(data=subset(krem_range, type=='max_temp'), aes(ymin=min, ymax=max), position=position_nudge(0.2)) +scale_x_continuous('Month',breaks=1:12,labels=months) +
-  scale_y_continuous('Temperature Cº', limits=c(-30,40), breaks=seq(-30, 40, 5)) +scale_color_discrete(breaks=c('max_temp','min_temp'),labels=c('Daily high','Daily low')) +
+  scale_y_continuous('Temperature ºC', limits=c(-30,40), breaks=seq(-30, 40, 5)) +scale_color_discrete(breaks=c('max_temp','min_temp'),labels=c('Daily high','Daily low')) +
   guides(color=guide_legend(title = element_blank())) + theme(legend.position = c(0.16,0.9)) +
   geom_line(data=subset(krem_range, type=='min_temp')) +geom_line(data=subset(krem_range, type=='max_temp'), position=position_nudge(0.2)) + ggtitle('1876-2000')
 
@@ -117,15 +119,17 @@ krem_range <- krem_narrow %>% filter(date >= as.Date('2000-01-01')) %>% group_by
 p2 <- ggplot(krem_range, aes(x=month, y=mean, color=type)) +
   geom_pointrange(data=subset(krem_range, type=='min_temp'), aes(ymin=min, ymax=max)) +
   geom_pointrange(data=subset(krem_range, type=='max_temp'), aes(ymin=min, ymax=max), position=position_nudge(0.2)) +scale_x_continuous('Month',breaks=1:12,labels=months) +
-  scale_y_continuous('Temperature Cº', limits=c(-30, 40), breaks=seq(-30, 40, 5)) +scale_color_discrete(breaks=c('max_temp','min_temp'),labels=c('Daily high','Daily low')) +
+  scale_y_continuous('Temperature ºC', limits=c(-30, 40), breaks=seq(-30, 40, 5)) +scale_color_discrete(breaks=c('max_temp','min_temp'),labels=c('Daily high','Daily low')) +
   guides(color=guide_legend(title = element_blank())) + theme(legend.position = c(0.16,0.9)) +
   geom_line(data=subset(krem_range, type=='min_temp')) +geom_line(data=subset(krem_range, type=='max_temp'), position=position_nudge(0.2)) + ggtitle('2000-2018')
 
 p1 + p2 + plot_annotation(title='Kremsmünster, Austria Daily Temperature Range', caption='Source: https://www.ecad.eu/')
 ```
 
-### Temperature anomaly based on 100-year average
-```{r anom, message=F, warning=F, error=F, fig.width=9.5, fig.height=6}
+### 2.5º temperature anomaly versus on 100-year average
+Climate scientists frequently review temperature anomalies, defined as deviations vs a baseline period. Here we plot the annual average anomaly vs a 100-year baseline (1876-1976). We notice an upward trend since the 1970s, amounting to approximately 2.5º C in Kremsmünster at present.
+
+```{r anom, message=F, warning=F, error=F, fig.width=9.5, fig.height=6.5}
 krem_narrow %<>% mutate(day=yday(date))
 krem_range <- krem_narrow %>% filter(type=='mean_temp', date < as.Date('1976-01-01')) %>% group_by(day) %>% summarize(centurymean=mean(Temp, na.rm=T))
 
@@ -136,14 +140,16 @@ anomaly %<>% mutate(year = year(date)) %>% as_tsibble(index=date) %>%
 
 ggplot(anomaly, aes(x=year, y=anom)) +geom_line(alpha=0.8)  +
   scale_x_continuous('Year', breaks=seq(1880, 2020, 20)) +
-  scale_y_continuous('Temperature Anomaly Cº', limits=c(-2, 4), breaks=seq(-2, 4, 0.5))  +
+  scale_y_continuous('Temperature Anomaly ºC', limits=c(-2, 4), breaks=seq(-2, 4, 0.5))  +
   geom_smooth(size=1.5, color='red') + geom_hline(yintercept=0,color='dodgerblue',linetype=2,size=2) +
   labs(title='Kremsmünster, Austria: 1876-2018 Temperature Anomaly', subtitle = 'Baseline period: 1876-1976. Loess trend in red.',
           caption='Source: https://www.ecad.eu/')
 ```
 
-### Freezing days
-```{r freeze, message=F, warning=F, error=F, fig.width=9.5, fig.height=6}
+### 20-30 fewer below-zero days per year versus history
+Here we count the number of below-zero mean temperature days per winter season (this spans the second half of one calendar year and first half of the next year). While Kremsmünster used to experience 60-70 below-zero days a year, that figure is now down to about 40 days.
+
+```{r freeze, message=F, warning=F, error=F, fig.width=9.5, fig.height=6.5}
 krem_narrow %<>% mutate(year=year(date), winter=ifelse(month>6, 1, 0)) %>%
   mutate(year=year+winter) %>% select(-winter)
 krem_high <- krem_narrow %>% filter(type=='max_temp') %>% select(date, Temp, year)
@@ -156,12 +162,14 @@ ggplot(num_freeze_days, aes(x=year, y=num_freezing)) +geom_line(alpha=0.8)  +
   scale_x_continuous('Year', breaks=seq(1880, 2020, 20)) +
   scale_y_continuous('Number of Freezing Days', limits=c(0, 110), breaks=seq(0, 110, 20))  +
   geom_smooth(size=1.5, color='dodgerblue') +
-  labs(title='Kremsmünster, Austria: 1876-2017 Number of Freezing Days', subtitle = 'Number of days per year with daily mean temp < 0 Cº. Loess trend in blue.',
+  labs(title='Kremsmünster, Austria: 1876-2017 Number of Freezing Days', subtitle = 'Number of days per year with daily mean temp < 0 ºC. Loess trend in blue.',
        caption='Source: https://www.ecad.eu/')
 ```
 
-### Hot days
-```{r hot, message=F, warning=F, error=F, fig.width=9.5, fig.height=6}
+### 15-20 more hot (> 30º) days a year
+The converse is also true.  Here we count the number of hot (> 30º high) temperature days per year. This has increased from being very rare (0-5 days a year in Kremsmünster) to now more common with 15-20 (or more) such days.
+
+```{r hot, message=F, warning=F, error=F, fig.width=9.5, fig.height=6.5}
 num_hot_days <- krem_high %>% group_by(year) %>% filter(Temp >= 30) %>%
                 summarize(num_hot=n()) %>% as_tsibble(index=year) %>% fill_gaps() %>%
                 replace_na(list(num_hot=0)) 
@@ -170,12 +178,14 @@ ggplot(num_hot_days, aes(x=year, y=num_hot)) +geom_line(alpha=0.7)  +
   scale_x_continuous('Year', breaks=seq(1880,2020,20)) +
   scale_y_continuous('Number of Hot Days', limits=c(0, 40), breaks=seq(0, 40, 10) , oob=scales::rescale_none)  +
   geom_smooth(size=1.5, color='red') +
-  labs(title='Kremsmünster, Austria: 1876-2018 Number of Hot Days', subtitle = 'Number of days per year with daily high temp >= 30 Cº. Loess trend in red',
+  labs(title='Kremsmünster, Austria: 1876-2018 Number of Hot Days', subtitle = 'Number of days per year with daily high temp >= 30 ºC. Loess trend in red',
        caption='Source: https://www.ecad.eu/')
 ```
 
-### Annual "excess degrees"
-```{r excess, message=F, warning=F, error=F, fig.width=9.5, fig.height=6}
+### Annual cumulative "excess degrees" spiking
+Last, before turning to the modeling with fable, we construct a metric of how hot it's getting by plotting the cumulative sum of daily highs in excess of 30 ºC over the course of a year.  This provides insight not only how many hot days a year there now are, but also the cumulative excess heat. While this figure was essentially zero through 1980, it has spiked remarkably in the last few years.
+
+```{r excess, message=F, warning=F, error=F, fig.width=9.5, fig.height=6.5}
 excess_degrees <- krem_high %>% mutate(excess_heat=ifelse(Temp-30 > 0, Temp-30, 0)) %>% group_by(year) %>% summarize(excess_degrees_total=sum(excess_heat)) %>%
                   as_tsibble(index=year) %>% fill_gaps() %>% replace_na(list(excess_degrees_total=0)) %>% filter(year<=2018)
 
@@ -183,13 +193,16 @@ ggplot(excess_degrees, aes(x=year, y=excess_degrees_total)) +geom_line(alpha=0.7
   scale_x_continuous('Year', breaks=seq(1880, 2020, 20)) +
   scale_y_continuous('Annual Excess Degrees', limits=c(0, 140), breaks=seq(0, 140, 20), oob=scales::rescale_none) +
   geom_smooth(size=1.5, color='red') +
-  labs(title="Kremsmünster, Austria: 1876-2018 Annual Sum of 'Excess Degree' Days", subtitle = 'Annual sum of (daily high - 30 Cº). Loess trend in red',
+  labs(title="Kremsmünster, Austria: 1876-2018 Annual Sum of 'Excess Degree' Days", subtitle = 'Annual sum of (daily high - 30 ºC). Loess trend in red',
        caption='Source: https://www.ecad.eu/')
 ```
 
 ## Forecasting with Fable
+We now turn to the time series forecasts using fable.  As shown, it's quite straightforward to fit the model and extract forecasts and standard errors. I was not able to get the new geom_forecast(), which appears to do everything automatically to work, so I had to add an additional fortify step. This is not a major issue, and I'm sure it's due to fable's immaturity at this time.
 
-### Forecasting temperature anomaly with ETS model
+### Forecasting temperature anomaly with exponential smoothing (ETS) model
+Fable currently implements Hyndman's exponential smoothing (ETS) model and selects the optimal parameters. There are helper functions to extract all parameters, fitted values, errors, and forecasts. The 10-year forecast suggests the Kremsmünster temperature anomaly could be 3º within a decade. 
+
 ```{r fable, message=F, warning=F, error=F, fig.width=9.5, fig.height=6}
 anomaly_model <- anomaly %>% model(ets=ETS(anom))
 anomaly_fbl <- anomaly_model %>%  forecast(h = "10 years")
@@ -197,7 +210,7 @@ anomaly_fbl <- fortify(anomaly_fbl,level=80)
 
 p1 <- ggplot(anomaly, aes(x=year, y=anom)) +geom_line(alpha=0.8)  +
   scale_x_continuous('Year', breaks=seq(1880, 2020, 20)) + geom_hline(yintercept=0,linetype=2,color='dodgerblue',size=2)+
-  scale_y_continuous('Temperature Anomaly Cº', limits=c(-2, 5), breaks=seq(-2, 5, 0.5))  +
+  scale_y_continuous('Temperature Anomaly ºC', limits=c(-2, 5), breaks=seq(-2, 5, 0.5))  +
   labs(title='Kremsmünster, Austria: 1876-2018 Temperature Anomaly', subtitle = '10-year ETS forecast in red, 80% confidence interval shaded.', caption='Source: https://www.ecad.eu/ Forecasts by @cortinah')
 
 p1 + geom_smooth(aes(x=year, y=anom, ymax=upper, ymin=lower), size=1.5,
@@ -205,6 +218,8 @@ p1 + geom_smooth(aes(x=year, y=anom, ymax=upper, ymin=lower), size=1.5,
 ```
 
 ### Forecasting number of hot days with a random walk model
+As an illustration, switching to a simpler random walk (ARIMA) model with drift is as simple as changing the model() call. Here we take a naive look at how the number of hot days in Kremsmünster might evolve over the next decade.
+
 ```{r fable2, message=F, warning=F, error=F, fig.width=9.5, fig.height=6}
 hotday_model <- num_hot_days %>% model(ets=RW(num_hot ~ drift()))
 hotday_fbl <- hotday_model %>%  forecast(h = "10 years")
@@ -219,3 +234,5 @@ p1 + geom_smooth(aes(x=year, y=num_hot, ymax=upper, ymin=lower), size=1.5,
                  color='red', fill='dodgerblue', data=hotday_fbl, stat='identity')
 ```
 
+## Thank you for reading!
+If you got this far, thank you for reading and please don't hesitate to send me your comments or suggestions. While this analysis pertains to only a single location, the conclusions I draw from this are unfortunatealy rather dispiriting, and reinforce the urgent need to act against catastrophic climate change.
