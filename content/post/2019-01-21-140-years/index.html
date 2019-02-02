@@ -86,7 +86,7 @@ ggplot(krem, aes(x=date, y=mean_temp)) +geom_line(alpha=0.8)  +
 </div>
 <div id="visualize-monthly-temperature-ranges-for-different-periods" class="section level3">
 <h3>Visualize monthly temperature ranges for different periods</h3>
-<p>We start the EDA by looking at the range of daily highs/lows by month. First we look at the full 142 years, and below we break it down into the 1876-2000 and 2000-2018 periods. The overall seasonality looks as expected, but we can see that the winters in recent years have become less cold, and the summers warmer. While winter lows in the -25º to -20º range occurred in the earlier period, more recent winter lows are near -15º. Furthermore, the daily high curve has shifted higher and 30º-35º degree highs are more common.</p>
+<p>We start the EDA by looking at the range of daily highs/lows by month. First we look at the full 142 years, and below we break it down into the 1876-2000 and 2000-2018 periods. The overall seasonality looks as expected, but we can see that the winters in recent years have become less cold, and the summers warmer. While winter lows in the -25º to -20º C range occurred in the earlier period, more recent winter lows are near -15º. Furthermore, the daily high curve has shifted higher and 30º-35º degree highs are more common.</p>
 <pre class="r"><code>krem_narrow &lt;- gather(krem, key=&#39;type&#39;, value=&#39;Temp&#39;, min_temp, max_temp, mean_temp) %&gt;% as_tibble()
 krem_range &lt;- krem_narrow %&gt;% group_by(type, month) %&gt;% summarize(mean=mean(Temp,na.rm=T), max=max(Temp,na.rm=T), min=min(Temp,na.rm=T))
 months &lt;- c(&#39;Jan&#39;,&#39;Feb&#39;,&#39;Mar&#39;,&#39;Apr&#39;,&#39;May&#39;,&#39;Jun&#39;,&#39;Jul&#39;,&#39;Aug&#39;,&#39;Sep&#39;,&#39;Oct&#39;,&#39;Nov&#39;,&#39;Dec&#39;)
@@ -102,8 +102,8 @@ ggplot(krem_range, aes(x=month, y=mean, color=type)) +
 <p><img src="/post/2019-01-21-140-years/index_files/figure-html/monthly-1.png" width="912" /></p>
 <p><img src="/post/2019-01-21-140-years/index_files/figure-html/periods-1.png" width="912" /></p>
 </div>
-<div id="-temperature-anomaly-versus-on-100-year-average" class="section level3">
-<h3>2.5º temperature anomaly versus on 100-year average</h3>
+<div id="-c-temperature-anomaly-versus-on-100-year-average" class="section level3">
+<h3>2.5º C temperature anomaly versus on 100-year average</h3>
 <p>Climate scientists frequently review temperature anomalies, defined as deviations vs a baseline period. Here we plot the annual average anomaly vs a 100-year baseline (1876-1976). We notice an upward trend since the 1970s, amounting to approximately 2.5º C in Kremsmünster at present.</p>
 <pre class="r"><code>krem_narrow %&lt;&gt;% mutate(day=yday(date))
 krem_range &lt;- krem_narrow %&gt;% filter(type==&#39;mean_temp&#39;, date &lt; as.Date(&#39;1976-01-01&#39;)) %&gt;% group_by(day) %&gt;% summarize(centurymean=mean(Temp, na.rm=T))
@@ -136,12 +136,12 @@ ggplot(num_freeze_days, aes(x=year, y=num_freezing)) +geom_line(alpha=0.8)  +
   scale_x_continuous(&#39;Year&#39;, breaks=seq(1880, 2020, 20)) +
   scale_y_continuous(&#39;Number of Freezing Days&#39;, limits=c(0, 110), breaks=seq(0, 110, 20))  +
   geom_smooth(size=1.5, color=&#39;dodgerblue&#39;) +
-  labs(title=&#39;Kremsmünster, Austria: 1876-2017 Number of Freezing Days&#39;, subtitle = &#39;Number of days per year with daily mean temp &lt; 0 ºC. Loess trend in blue.&#39;,
+  labs(title=&#39;Kremsmünster, Austria: 1876-2017 Number of Freezing Days&#39;, subtitle = &#39;Number of days per year with daily mean temp &lt; 0º C. Loess trend in blue.&#39;,
        caption=&#39;Source: https://www.ecad.eu/&#39;)</code></pre>
 <p><img src="/post/2019-01-21-140-years/index_files/figure-html/freeze-1.png" width="912" /></p>
 </div>
-<div id="more-hot-30-days-a-year" class="section level3">
-<h3>15-20 more hot (&gt; 30º) days a year</h3>
+<div id="more-hot-30-c-days-a-year" class="section level3">
+<h3>15-20 more hot (&gt; 30º C) days a year</h3>
 <p>The converse is also true. Here we count the number of hot (&gt; 30º high) temperature days per year. This has increased from being very rare (0-5 days a year in Kremsmünster) to now more common with 15-20 (or more) such days.</p>
 <pre class="r"><code>num_hot_days &lt;- krem_high %&gt;% group_by(year) %&gt;% filter(Temp &gt;= 30) %&gt;%
                 summarize(num_hot=n()) %&gt;% as_tsibble(index=year) %&gt;% fill_gaps() %&gt;%
@@ -151,13 +151,13 @@ ggplot(num_hot_days, aes(x=year, y=num_hot)) +geom_line(alpha=0.7)  +
   scale_x_continuous(&#39;Year&#39;, breaks=seq(1880,2020,20)) +
   scale_y_continuous(&#39;Number of Hot Days&#39;, limits=c(0, 40), breaks=seq(0, 40, 10) , oob=scales::rescale_none)  +
   geom_smooth(size=1.5, color=&#39;red&#39;) +
-  labs(title=&#39;Kremsmünster, Austria: 1876-2018 Number of Hot Days&#39;, subtitle = &#39;Number of days per year with daily high temp &gt;= 30 ºC. Loess trend in red&#39;,
+  labs(title=&#39;Kremsmünster, Austria: 1876-2018 Number of Hot Days&#39;, subtitle = &#39;Number of days per year with daily high temp &gt;= 30º C. Loess trend in red&#39;,
        caption=&#39;Source: https://www.ecad.eu/&#39;)</code></pre>
 <p><img src="/post/2019-01-21-140-years/index_files/figure-html/hot-1.png" width="912" /></p>
 </div>
 <div id="annual-cumulative-excess-degrees-spiking" class="section level3">
 <h3>Annual cumulative “excess degrees” spiking</h3>
-<p>Last, before turning to the modeling with fable, we construct a metric of how hot it’s getting by plotting the cumulative sum of daily highs in excess of 30 ºC over the course of a year. This provides insight not only how many hot days a year there now are, but also the cumulative excess heat. While this figure was essentially zero through 1980, it has spiked remarkably in the last few years.</p>
+<p>Last, before turning to the modeling with fable, we construct a metric of how hot it’s getting by plotting the cumulative sum of daily highs in excess of 30º C over the course of a year. This provides insight not only how many hot days a year there now are, but also the cumulative excess heat. While this figure was essentially zero through 1980, it has spiked remarkably in the last few years.</p>
 <pre class="r"><code>excess_degrees &lt;- krem_high %&gt;% mutate(excess_heat=ifelse(Temp-30 &gt; 0, Temp-30, 0)) %&gt;% group_by(year) %&gt;% summarize(excess_degrees_total=sum(excess_heat)) %&gt;%
                   as_tsibble(index=year) %&gt;% fill_gaps() %&gt;% replace_na(list(excess_degrees_total=0)) %&gt;% filter(year&lt;=2018)
 
@@ -165,7 +165,7 @@ ggplot(excess_degrees, aes(x=year, y=excess_degrees_total)) +geom_line(alpha=0.7
   scale_x_continuous(&#39;Year&#39;, breaks=seq(1880, 2020, 20)) +
   scale_y_continuous(&#39;Annual Excess Degrees&#39;, limits=c(0, 140), breaks=seq(0, 140, 20), oob=scales::rescale_none) +
   geom_smooth(size=1.5, color=&#39;red&#39;) +
-  labs(title=&quot;Kremsmünster, Austria: 1876-2018 Annual Sum of &#39;Excess Degree&#39; Days&quot;, subtitle = &#39;Annual sum of (daily high - 30 ºC). Loess trend in red&#39;,
+  labs(title=&quot;Kremsmünster, Austria: 1876-2018 Annual Sum of &#39;Excess Degree&#39; Days&quot;, subtitle = &#39;Annual sum of (daily high - 30º C). Loess trend in red&#39;,
        caption=&#39;Source: https://www.ecad.eu/&#39;)</code></pre>
 <p><img src="/post/2019-01-21-140-years/index_files/figure-html/excess-1.png" width="912" /></p>
 </div>
