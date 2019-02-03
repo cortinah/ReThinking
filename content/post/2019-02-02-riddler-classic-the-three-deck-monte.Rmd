@@ -67,9 +67,8 @@ As the heatmap shows, no matter what deck you chose, your opponent can choose a 
 
 $$ \sigma_{m}=\frac{\sigma}{\sqrt{N}} $$  
 
-formula to compute the standard error of those means.  For example if your opponent plays optimally you will only with with 29.7% probability +/- 0.1%.  So don't play this game...
-
-```{r game2, fig.height=7, fig.width=7, message=FALSE, warning=FALSE, echo=F}
+formula to compute the standard error of those means.  For example if your opponent plays optimally you probability of winning is only 29.7% +/- 0.1%.  So don't play this game...
+```{r game2, fig.height=7, fig.widthn=7, message=FALSE, warning=FALSE, echo=F}
 library(knitr)
 library(kableExtra)
 results$Wins <- results$Wins*100
