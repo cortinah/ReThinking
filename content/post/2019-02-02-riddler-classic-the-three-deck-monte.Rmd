@@ -11,7 +11,7 @@ slug: riddler-classic-the-three-deck-monte
 
 `r blogdown::shortcode("tweet", "1091345144543133702")`
 
-## Should you Take the Three Deck Monte Bet?
+## Should You Take the Three Deck Monte Bet?
 
 This week's [FiveThirtyEight Riddler Classic](https://fivethirtyeight.com/features/can-you-escape-a-maze-without-walls/) is about whether you should play "Three Deck Monte" on a street corner. You pick one of three decks offered with all cards visible, and your opponent then picks one of the two others. After shuffling each deck you compete in a game similar to War. You each turn over cards one at a time, the one with a higher card wins that turn, and the first to win five turns wins the game. The decks look like this:  
 
@@ -24,7 +24,7 @@ Should you play the game?
 ## Simulating the Game
 My approach to finding the solution is to simulate each of the six possible match ups, knowing that your opponent will pick the deck that offers the highest probability of winning the game. We run 100,000 replications of each of the six match ups and plot the results below. The heatmap shows the mean probability of winning. We also calculate the standard deviation, so we can compute the error around that mean.
 
-```{r game, fig.height=7, fig.width=7, message=FALSE, warning=FALSE, results='asis'}
+```{r game, fig.height=7.5, fig.width=7.5, message=FALSE, warning=FALSE, results='asis'}
 library(ggplot2)
 game <- function(mydeck, hisdeck) {
 decks <- list(

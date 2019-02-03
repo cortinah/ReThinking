@@ -14,7 +14,7 @@ slug: riddler-classic-the-three-deck-monte
 
 {{% tweet "1091345144543133702" %}}
 <div id="should-you-take-the-three-deck-monte-bet" class="section level2">
-<h2>Should you Take the Three Deck Monte Bet?</h2>
+<h2>Should You Take the Three Deck Monte Bet?</h2>
 <p>This week’s <a href="https://fivethirtyeight.com/features/can-you-escape-a-maze-without-walls/">FiveThirtyEight Riddler Classic</a> is about whether you should play “Three Deck Monte” on a street corner. You pick one of three decks offered with all cards visible, and your opponent then picks one of the two others. After shuffling each deck you compete in a game similar to War. You each turn over cards one at a time, the one with a higher card wins that turn, and the first to win five turns wins the game. The decks look like this:</p>
 <ul>
 <li>Red deck: four aces, four 9s, four 7s<br />
@@ -63,7 +63,7 @@ results &lt;- sim_all(100000)
 
 ggplot(results, aes(x=hisdeck,y=mydeck,fill=Wins)) + geom_tile() +theme_bw(base_size = 14) +coord_fixed() + theme(panel.grid.major = element_blank()) +labs(title=&#39;FiveThirtyEight Riddler Classic&#39;,subtitle=&#39;Should You Take the Three Deck Monte Bet?&#39;,caption=&quot;by: @cortinah, 2/2/2019&quot;,
   x=&#39;His Deck&#39;, y=&#39;My Deck&#39;) +scale_fill_continuous(&#39;My\nwin\nprob&#39;)</code></pre>
-<p><img src="/post/2019-02-02-riddler-classic-the-three-deck-monte_files/figure-html/game-1.png" width="672" /></p>
+<p><img src="/post/2019-02-02-riddler-classic-the-three-deck-monte_files/figure-html/game-1.png" width="720" /></p>
 </div>
 <div id="dont-play-this-game" class="section level2">
 <h2>Don’t Play This Game!</h2>
@@ -96,6 +96,48 @@ Red
 Blue
 </td>
 <td style="text-align:right;width: 6em; ">
+70.5
+</td>
+<td style="text-align:right;width: 6em; ">
+0.1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 6em; ">
+Red
+</td>
+<td style="text-align:left;width: 6em; ">
+Black
+</td>
+<td style="text-align:right;width: 6em; ">
+29.6
+</td>
+<td style="text-align:right;width: 6em; ">
+0.1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 6em; ">
+Blue
+</td>
+<td style="text-align:left;width: 6em; ">
+Red
+</td>
+<td style="text-align:right;width: 6em; ">
+30.1
+</td>
+<td style="text-align:right;width: 6em; ">
+0.1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 6em; ">
+Blue
+</td>
+<td style="text-align:left;width: 6em; ">
+Black
+</td>
+<td style="text-align:right;width: 6em; ">
 70.2
 </td>
 <td style="text-align:right;width: 6em; ">
@@ -104,55 +146,13 @@ Blue
 </tr>
 <tr>
 <td style="text-align:left;width: 6em; ">
-Red
-</td>
-<td style="text-align:left;width: 6em; ">
 Black
 </td>
-<td style="text-align:right;width: 6em; ">
-29.9
-</td>
-<td style="text-align:right;width: 6em; ">
-0.1
-</td>
-</tr>
-<tr>
 <td style="text-align:left;width: 6em; ">
 Blue
-</td>
-<td style="text-align:left;width: 6em; ">
-Red
 </td>
 <td style="text-align:right;width: 6em; ">
 29.7
-</td>
-<td style="text-align:right;width: 6em; ">
-0.1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;width: 6em; ">
-Blue
-</td>
-<td style="text-align:left;width: 6em; ">
-Black
-</td>
-<td style="text-align:right;width: 6em; ">
-70.3
-</td>
-<td style="text-align:right;width: 6em; ">
-0.1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;width: 6em; ">
-Black
-</td>
-<td style="text-align:left;width: 6em; ">
-Blue
-</td>
-<td style="text-align:right;width: 6em; ">
-29.8
 </td>
 <td style="text-align:right;width: 6em; ">
 0.1
