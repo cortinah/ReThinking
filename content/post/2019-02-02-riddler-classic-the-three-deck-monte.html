@@ -1,0 +1,177 @@
+---
+title: 'Riddler Classic: The Three Deck Monte'
+author: Hernando Cortina
+date: '2019-02-02'
+categories:
+  - Puzzles
+tags:
+  - Riddler
+slug: riddler-classic-the-three-deck-monte
+---
+
+<script src="/rmarkdown-libs/kePrint/kePrint.js"></script>
+
+
+{{% tweet "1091345144543133702" %}}
+<div id="should-you-take-the-three-deck-monte-bet" class="section level2">
+<h2>Should you Take the Three Deck Monte Bet?</h2>
+<p>This week’s <a href="https://fivethirtyeight.com/features/can-you-escape-a-maze-without-walls/">FiveThirtyEight Riddler Classic</a> is about whether you should play “Three Deck Monte” on a street corner. You pick one of three decks offered with all cards visible, and your opponent then picks one of the two others. After shuffling each deck you compete in a game similar to War. You each turn over cards one at a time, the one with a higher card wins that turn, and the first to win five turns wins the game. The decks look like this:</p>
+<ul>
+<li>Red deck: four aces, four 9s, four 7s<br />
+</li>
+<li>Blue deck: four kings, four jacks, four 6s<br />
+</li>
+<li>Black deck: four queens, four 10s, four 8s</li>
+</ul>
+<p>Should you play the game?</p>
+</div>
+<div id="simulating-the-game" class="section level2">
+<h2>Simulating the Game</h2>
+<p>My approach to finding the solution is to simulate each of the six possible match ups, knowing that your opponent will pick the deck that offers the highest probability of winning the game. We run 100,000 replications of each of the six match ups and plot the results below. The heatmap shows the mean probability of winning. We also calculate the standard deviation, so we can compute the error around that mean.</p>
+<pre class="r"><code>library(ggplot2)
+game &lt;- function(mydeck, hisdeck) {
+decks &lt;- list(
+  Red=c(14, 14, 14, 14, 9, 9, 9, 9, 7, 7, 7, 7),
+  Blue=c(13, 13, 13, 13, 11, 11, 11, 11, 6, 6, 6, 6),
+  Black=c(12, 12, 12, 12, 10, 10, 10, 10, 8, 8, 8, 8) )
+
+my_hand  &lt;- sample(decks[[mydeck]], 12)
+his_hand &lt;- sample(decks[[hisdeck]], 12)
+
+min(which(cumsum(my_hand &gt; his_hand)==5)) &lt; min(which(cumsum(my_hand &lt; his_hand)==5))
+}
+
+meansd &lt;- function(x) return(c(mean(x), sd(x)))
+
+sim_games &lt;- function(mydeck, hisdeck, count) {
+ c(mydeck, hisdeck, meansd(replicate(count, game(mydeck, hisdeck))))
+}
+
+sim_all &lt;- function(count) {
+results &lt;- data.frame( rbind(
+    sim_games(&#39;Red&#39;,&#39;Blue&#39;, count),
+    sim_games(&#39;Red&#39;,&#39;Black&#39;, count),
+    sim_games(&#39;Blue&#39;,&#39;Red&#39;, count),
+    sim_games(&#39;Blue&#39;,&#39;Black&#39;, count),
+    sim_games(&#39;Black&#39;,&#39;Blue&#39;, count),
+    sim_games(&#39;Black&#39;,&#39;Red&#39;, count) ))
+colnames(results) &lt;- c(&#39;mydeck&#39;,&#39;hisdeck&#39;,&#39;Wins&#39;,&#39;sd&#39;)
+results$Wins &lt;- as.numeric(as.character(results$Wins))
+results }
+
+results &lt;- sim_all(100000)
+
+ggplot(results, aes(x=hisdeck,y=mydeck,fill=Wins)) + geom_tile() +theme_bw(base_size = 14) +coord_fixed() + theme(panel.grid.major = element_blank()) +labs(title=&#39;FiveThirtyEight Riddler Classic&#39;,subtitle=&#39;Should You Take the Three Deck Monte Bet?&#39;,caption=&quot;by: @cortinah, 2/2/2019&quot;,
+  x=&#39;His Deck&#39;, y=&#39;My Deck&#39;) +scale_fill_continuous(&#39;My\nwin\nprob&#39;)</code></pre>
+<p><img src="/post/2019-02-02-riddler-classic-the-three-deck-monte_files/figure-html/game-1.png" width="672" /></p>
+</div>
+<div id="dont-play-this-game" class="section level2">
+<h2>Don’t Play This Game!</h2>
+<p>As the heatmap shows, no matter what deck you chose, your opponent can choose a deck that gives him approximately 70% chance of winning. For example, if you choose the red deck, he can then choose the blue deck, giving him 70% odds of winning, and so on. As a check on the reliability of the results we use the</p>
+<p><span class="math display">\[ \sigma_{m}=\frac{\sigma}{\sqrt{N}} \]</span></p>
+<p>formula to compute the standard error of those means. For example if your opponent plays optimally you will only with with 29.7% probability +/- 0.1%. So don’t play this game…</p>
+<table class="table table-striped table-hover" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+My deck
+</th>
+<th style="text-align:left;">
+His Deck
+</th>
+<th style="text-align:right;">
+My Win %
+</th>
+<th style="text-align:right;">
+Std Error
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;width: 6em; ">
+Red
+</td>
+<td style="text-align:left;width: 6em; ">
+Blue
+</td>
+<td style="text-align:right;width: 6em; ">
+70.2
+</td>
+<td style="text-align:right;width: 6em; ">
+0.1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 6em; ">
+Red
+</td>
+<td style="text-align:left;width: 6em; ">
+Black
+</td>
+<td style="text-align:right;width: 6em; ">
+29.9
+</td>
+<td style="text-align:right;width: 6em; ">
+0.1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 6em; ">
+Blue
+</td>
+<td style="text-align:left;width: 6em; ">
+Red
+</td>
+<td style="text-align:right;width: 6em; ">
+29.7
+</td>
+<td style="text-align:right;width: 6em; ">
+0.1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 6em; ">
+Blue
+</td>
+<td style="text-align:left;width: 6em; ">
+Black
+</td>
+<td style="text-align:right;width: 6em; ">
+70.3
+</td>
+<td style="text-align:right;width: 6em; ">
+0.1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 6em; ">
+Black
+</td>
+<td style="text-align:left;width: 6em; ">
+Blue
+</td>
+<td style="text-align:right;width: 6em; ">
+29.8
+</td>
+<td style="text-align:right;width: 6em; ">
+0.1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 6em; ">
+Black
+</td>
+<td style="text-align:left;width: 6em; ">
+Red
+</td>
+<td style="text-align:right;width: 6em; ">
+70.2
+</td>
+<td style="text-align:right;width: 6em; ">
+0.1
+</td>
+</tr>
+</tbody>
+</table>
+</div>
