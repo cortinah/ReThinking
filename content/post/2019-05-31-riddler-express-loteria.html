@@ -1,0 +1,57 @@
+---
+title: 'Riddler Express: ¡Lotería!'
+author: Hernando Cortina
+date: '2019-05-31'
+slug: riddler-express-loteria
+categories:
+  - Puzzles
+tags:
+  - Riddler
+---
+
+
+
+{{% tweet "1134449069877805057" %}}
+<div id="will-you-end-up-with-an-empty-loteria-grid" class="section level2">
+<h2>Will you end up with an empty lotería grid?</h2>
+<p>After a hiatus I’m taking up this week’s <a href="https://fivethirtyeight.com/features/can-you-win-the-loteria/">FiveThirtyEight Riddler Express</a> which harkens back to a game I played as a child. Each player receives a four-by-four grid of images and a caller randomly draws a card from a deck containing 54 possible images. If a player has that image on their grid, they mark it off and the game ends when one of the players fills their entire card and screams “¡Lotería!”. Each of the 54 possible images can only show up once on each grid. The Riddler asks, what is the probability that a player wipes out and loses without marking off a single image on his or her grid. And how does that probability change based on the size of the grid and the number of images?</p>
+</div>
+<div id="calculating-the-probability" class="section level2">
+<h2>Calculating the probability</h2>
+<p>The probability we are seeking boils down to the probability that none of the images on your grid are also on your opponent’s grid. If we number all images from 1 to 54, then, without loss of generality, if your opponent’s grid includes images numbered 1-16, then all of the images on your grid should be in the range of 17-54. Accordingly, the probability that the image on your first square is not on your opponent’s grid is:</p>
+<p><span class="math display">\[ \frac{54-17}{54} \]</span>
+Since images are not repeated on a given grid, the probability that the next image is also not on your opponent’s grid is:</p>
+<p><span class="math display">\[ \frac{53-17}{53} \]</span>
+and so on.</p>
+<p>The probability that none of your 16 images are also on you opponents’ grid is:
+<span class="math display">\[ \prod_{i=0}^{i=15} \frac{54-i-17}{54-i} \]</span></p>
+<p>Which is quite unlikely as we can see from this line of R code:</p>
+<pre class="r"><code>library(tidyverse)
+0:15 %&gt;% map_dbl(~ (54 -.x -17) / (54 - .x)) %&gt;% prod()</code></pre>
+<p>[1] 0.0006103731</p>
+</div>
+<div id="different-sized-grids-and-number-of-images" class="section level2">
+<h2>Different sized grids and number of images</h2>
+<p>Below we explore how grids of ranging from 2x2 to 6x6, as well as 20-70 images change the probability of wiping out.
+As shown, the larger the grid and the more images there are, the less likely that a player doesn’t mark off a single image becomes. The cases on the lower right are not valid since there are fewer images than squares on the grid.</p>
+<pre class="r"><code>loteria &lt;- function(grid=16, symbols=54) {
+  
+seq(from=0, to=(grid-1)) %&gt;%
+map_dbl(~ (symbols -.x -(grid+1)) / (symbols - .x)) %&gt;% prod()
+}
+
+
+gridprob &lt;- data.frame(x=rep(c(4,9,16,25,36),6),
+                      y=rep(c(20,30,40,54,60,70), each=5))
+
+gridprob$Prob &lt;- map2_dbl(gridprob$x, gridprob$y, loteria)
+
+ggplot(gridprob, aes(x=as.factor(x),y=as.factor(y),fill=Prob)) +
+ geom_tile(color=&#39;white&#39;) +theme_bw(base_size = 15) +
+ scale_fill_viridis_c(option = &#39;D&#39;) +coord_fixed() +
+ labs(x=&#39;Grid size&#39;, y=&#39;Number of images&#39;, caption=&#39;By @cortinah; May 31, 2019&#39;,
+ title=&#39;¡Lotería! Riddler Express&#39;,
+ subtitle = &#39;Probability of one player losing with empty grid&#39;)</code></pre>
+<p><img src="/post/2019-05-31-riddler-express-loteria_files/figure-html/pro2-1.png" width="720" /></p>
+<p>¡Gracias Señor Ollie!</p>
+</div>
