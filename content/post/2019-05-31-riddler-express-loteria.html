@@ -32,7 +32,7 @@ and so on.</p>
 </div>
 <div id="different-sized-grids-and-number-of-images" class="section level2">
 <h2>Different sized grids and number of images</h2>
-<p>Below we explore how grids of ranging from 2x2 to 6x6, as well as 20-70 images change the probability of wiping out.
+<p>Below we explore how grids of ranging from 2x2 to 7x7, as well as 20-70 images change the probability of wiping out.
 As shown, the larger the grid and the more images there are, the less likely that a player doesn’t mark off a single image becomes. The cases on the lower right are not valid since there are fewer images than squares on the grid.</p>
 <pre class="r"><code>loteria &lt;- function(grid=16, symbols=54) {
   
@@ -41,8 +41,8 @@ map_dbl(~ (symbols -.x -(grid+1)) / (symbols - .x)) %&gt;% prod()
 }
 
 
-gridprob &lt;- data.frame(x=rep(c(4,9,16,25,36),6),
-                      y=rep(c(20,30,40,54,60,70), each=5))
+gridprob &lt;- data.frame(x=rep(c(4,9,16,25,36,49),6),
+                      y=rep(c(20,30,40,54,60,70), each=6))
 
 gridprob$Prob &lt;- map2_dbl(gridprob$x, gridprob$y, loteria)
 

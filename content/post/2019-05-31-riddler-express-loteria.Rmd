@@ -33,14 +33,14 @@ $$ \prod_{i=0}^{i=15} \frac{54-i-17}{54-i} $$
 
 Which is quite unlikely as we can see from this line of R code:
 
-```{r pro, fig.height=7.5, fig.width=7.5, message=FALSE, warning=FALSE, results='asis'}
+```{r pro, fig.height=8, fig.width=8, message=FALSE, warning=FALSE, results='asis'}
 library(tidyverse)
 0:15 %>% map_dbl(~ (54 -.x -17) / (54 - .x)) %>% prod()
 ```
 
 ## Different sized grids and number of images
 
-Below we explore how grids of ranging from 2x2 to 6x6, as well as 20-70 images change the probability of wiping out.
+Below we explore how grids of ranging from 2x2 to 7x7, as well as 20-70 images change the probability of wiping out.
 As shown, the larger the grid and the more images there are, the less likely that a player doesn't mark off a single image becomes. The cases on the lower right are not valid since there are fewer images than squares on the grid. 
 
 ```{r pro2, fig.height=7.5, fig.width=7.5, message=FALSE, warning=FALSE, results='asis'}
@@ -51,8 +51,8 @@ map_dbl(~ (symbols -.x -(grid+1)) / (symbols - .x)) %>% prod()
 }
 
 
-gridprob <- data.frame(x=rep(c(4,9,16,25,36),6),
-                      y=rep(c(20,30,40,54,60,70), each=5))
+gridprob <- data.frame(x=rep(c(4,9,16,25,36,49),6),
+                      y=rep(c(20,30,40,54,60,70), each=6))
 
 gridprob$Prob <- map2_dbl(gridprob$x, gridprob$y, loteria)
 
