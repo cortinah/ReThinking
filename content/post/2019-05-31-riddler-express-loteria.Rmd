@@ -22,20 +22,20 @@ After a hiatus I'm taking up this week's [FiveThirtyEight Riddler Express](https
 
 The probability we are seeking boils down to the probability that none of the images on your grid are also on your opponent's grid. If we number all images from 1 to 54, then, without loss of generality, if your opponent's grid includes images numbered 1-16, then all of the images on your grid should be in the range of 17-54. Accordingly, the probability that the image on your first square is not on your opponent's grid is:
 
-$$ \frac{54-17}{54} $$
+$$ \frac{54-16}{54} $$
 Since images are not repeated on a given grid, the probability that the next image is also not on your opponent's grid is:
   
-$$ \frac{53-17}{53} $$
+$$ \frac{53-16}{53} $$
 and so on.
 
 The probability that none of your 16 images are also on you opponents' grid is:
-$$ \prod_{i=0}^{i=15} \frac{54-i-17}{54-i} $$
+$$ \prod_{i=0}^{i=15} \frac{54-i-16}{54-i} $$
 
 Which is quite unlikely as we can see from this line of R code:
 
 ```{r pro, fig.height=8, fig.width=8, message=FALSE, warning=FALSE, results='asis'}
 library(tidyverse)
-0:15 %>% map_dbl(~ (54 -.x -17) / (54 - .x)) %>% prod()
+0:15 %>% map_dbl(~ (54 -.x -16) / (54 - .x)) %>% prod()
 ```
 
 ## Different sized grids and number of images
