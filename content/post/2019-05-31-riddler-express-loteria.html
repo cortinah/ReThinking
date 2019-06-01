@@ -37,7 +37,7 @@ As shown, the larger the grid and the more images there are, the less likely tha
 <pre class="r"><code>loteria &lt;- function(grid=16, symbols=54) {
   
 seq(from=0, to=(grid-1)) %&gt;%
-map_dbl(~ (symbols -.x -(grid+1)) / (symbols - .x)) %&gt;% prod()
+map_dbl(~ (symbols -.x -grid) / (symbols - .x)) %&gt;% prod()
 }
 
 
