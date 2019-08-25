@@ -1,7 +1,7 @@
 baseurl = "https://rethinking.rbind.io/"
 languageCode = "en-us"
 title = "R(e)Thinking"
-theme = "hugo-lithium-theme"
+theme = "hugo-lithium"
 googleAnalytics = "UA-114380969-1"
 disqusShortname = "rethinking-rbind-io"
 ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
