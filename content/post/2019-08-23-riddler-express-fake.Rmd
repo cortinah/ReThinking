@@ -21,7 +21,7 @@ How many fake notes should you add to the $2,500 in order to maximize the expect
   
   
 ## The odds of getting caught
-We ignore for a moment to gain some intuition about the problem the issue of rounding up to the nearest whole. The probability of any given fake bill being discovered is `$ 0.05 \cdot 0.25 = 0.0125 $`. The probability of *not* getting caught is hence `$ 1 - 0.0125 = 0.9875 $`. If you deposit `$ f $` forged bills, then the probability of being caught is `$ 0.9875 ^ {f} $`. The expected value of attempting to deposit `$ f $` forged bills and 25 real ones is:
+We ignore for a moment to gain some intuition about the problem the issue of rounding up to the nearest whole. The probability of any given fake bill being discovered is `$ 0.05 \cdot 0.25 = 0.0125 $`. The probability of *not* getting caught is hence `$ 1 - 0.0125 = 0.9875 $`. If you deposit `$ f $` forged bills, then the probability of not being caught is `$ 0.9875 ^ {f} $`. The expected value of attempting to deposit `$ f $` forged bills and 25 real ones is:
 
   $$ E(f) = 100 \cdot (f + 25) \cdot 0.9875^{f} $$
 

@@ -19,7 +19,7 @@ tags:
 </div>
 <div id="the-odds-of-getting-caught" class="section level2">
 <h2>The odds of getting caught</h2>
-<p>We ignore for a moment to gain some intuition about the problem the issue of rounding up to the nearest whole. The probability of any given fake bill being discovered is <code>$ 0.05 \cdot 0.25 = 0.0125 $</code>. The probability of <em>not</em> getting caught is hence <code>$ 1 - 0.0125 = 0.9875 $</code>. If you deposit <code>$ f $</code> forged bills, then the probability of being caught is <code>$ 0.9875 ^ {f} $</code>. The expected value of attempting to deposit <code>$ f $</code> forged bills and 25 real ones is:</p>
+<p>We ignore for a moment to gain some intuition about the problem the issue of rounding up to the nearest whole. The probability of any given fake bill being discovered is <code>$ 0.05 \cdot 0.25 = 0.0125 $</code>. The probability of <em>not</em> getting caught is hence <code>$ 1 - 0.0125 = 0.9875 $</code>. If you deposit <code>$ f $</code> forged bills, then the probability of not being caught is <code>$ 0.9875 ^ {f} $</code>. The expected value of attempting to deposit <code>$ f $</code> forged bills and 25 real ones is:</p>
 <p><span class="math display">\[ E(f) = 100 \cdot (f + 25) \cdot 0.9875^{f} \]</span></p>
 <p>Below is what the function looks like. It increases initially as more fakes are added, peaking around 50-55, then decreases as the growing probability of being caught outweighs the benefit of adding more fake bills.</p>
 <p><img src="/post/2019-08-23-riddler-express-fake_files/figure-html/plot1-1.png" width="672" /></p>
