@@ -27,7 +27,10 @@ tags:
 <pre class="r"><code>money &lt;- function(x) 100*(x+25)*(0.9875^x)
 which(map_dbl(1:100, money) == max(map_dbl(1:100, money)))</code></pre>
 <p>[1] 54</p>
-<p>We now incorporate the rounding up constraint. The expected value now becomes:</p>
+</div>
+<div id="incorporating-the-banks-rounding-up-checks" class="section level2">
+<h2>Incorporating the bank’s “rounding up” checks</h2>
+<p>In the puzzle statement the bank’s approach is to round up the number of bills it examines according to its 5% procedure. We now incorporate this constraint as shown below. The expected value now becomes:</p>
 <p><span class="math display">\[ E(f) = 100 \cdot (f + 25) \cdot ( 1- \frac{ceiling(f \cdot 0.05)}{f} \cdot 0.25)^{f} \]</span></p>
 <p>The plot is now discontinuous, as the rounding up causes more bills to be examined, resulting in greater probabilities of being caught than before (except on multiples of 20 fakes), and therefore lower expected values.</p>
 <p><img src="/post/2019-08-23-riddler-express-fake_files/figure-html/plot2-1.png" width="672" /></p>
@@ -35,6 +38,9 @@ which(map_dbl(1:100, money) == max(map_dbl(1:100, money)))</code></pre>
 <pre class="r"><code>money &lt;- function(x) 100*(x+25)*((1-ceiling(x*0.05)/x*0.25))^x
 which(map_dbl(1:100, money) == max(map_dbl(1:100, money)))</code></pre>
 <p>[1] 60</p>
+</div>
+<div id="why-is-the-optimum-higher-with-the-rounding-up-constraint" class="section level2">
+<h2>Why is the optimum higher with the rounding up constraint?</h2>
 <p>It may appear surprising at first that the rounding up constraint, which entails more bills being subject to examination, results in a higher optimal value of fakes. However, as we can see in the above chart the black dots are always above or at the same level as the red dots. This means that even with a higher optimal of 60, the <em>expected</em> value with the rounding constraint and 60 fakes is $3,996 which is below the expected value without the rounding constraint and 54 fakes of $4,005. The rounding up constraint does indeed make the forgery business a little less attractive for the forger.</p>
-<p>A fun puzzle as always <span class="citation">@ollie</span>. Thank you.</p>
+<p>A fun puzzle as always <a href="https://twitter.com/ollie">Ollie</a>. Thank you.</p>
 </div>
