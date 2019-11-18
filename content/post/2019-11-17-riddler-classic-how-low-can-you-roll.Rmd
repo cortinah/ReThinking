@@ -104,7 +104,7 @@ mean(riddler[,2])
 sd(riddler[,2])/sqrt(2000000)
 ```
 
-And the answer is... 0.4736 with a standard deviation of 0.0002141.  A 95% confidence interval for the average score is (0.4731, 0.4740). It's not obvious (at least to me) from the construction of the problem that the average would be near 0.47, or even below 0.5. 
+And the answer is... 0.4736 with a standard error of 0.0002141.  A 95% confidence interval for the average score is (0.4731, 0.4740). It's not obvious (at least to me) from the construction of the problem that the average would be near 0.47, or even below 0.5. 
 
 
 Thanks for reading!
