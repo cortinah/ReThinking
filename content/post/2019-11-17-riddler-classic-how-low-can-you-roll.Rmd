@@ -1,0 +1,110 @@
+---
+title: 'Riddler Classic: How Low Can You Roll?'
+author: Hernando Cortina
+date: '2019-11-17'
+slug: riddler-classic-how-low-can-you-roll
+categories:
+  - Puzzles
+tags:
+  - Riddler
+---
+
+`r blogdown::shortcode("tweet", "1195330849224441857")`
+
+
+## What's the average score of the game?
+
+In this week's [FiveThirtyEight Riddler Classic](https://fivethirtyeight.com/features/how-low-can-you-roll/) we are asked to calculate the average of series of scores, based on rolls of classic D&D style 10-sided die. The twist is that your score is the value of the die divided by 10, and you keep rolling the die over and over until you roll a zero.  Each time you roll, if the digit shown by the die is less than or equal to the last digit of your score, then that roll becomes the new last digit of your score. Otherwise you just go ahead and roll again until you roll a zero.
+
+I simulated one game in R as show below.  I generate 150 digits between 0-9 (just to be safe) and keep them until hitting the first zero. Then I check every digit and eliminate it if it's greater than the prior digit.  Last step is to divide each digit by the appropriate power of 10 and sum them.
+
+
+```{r roll, message=FALSE}
+roll <- function() {
+    draws <- sample(0:9, 150, replace = T)
+    if (draws[1]==0) return(0)
+    draws <- draws[1:min(which(draws==0))]
+    lastgood <- draws[1]
+
+for (i in 2:length(draws)){
+  
+  if (draws[i]==0) break
+  if (draws[i] > lastgood) {draws[i] <- NA}
+  else lastgood <- draws[i]
+                          }
+draws <- draws[!is.na(draws)]
+
+return(sum(draws/(10^seq_along(draws))))
+}
+
+roll()
+```
+
+Next, I create a function to generate n such digits, as well as a function to create a table with them and compute the rolling average:
+
+```{r n_roll, message=FALSE}
+roll_n <- function(n){
+  output <- numeric(n)
+  for (i in seq_len(n)) output[i] <- roll()
+  return(output)
+}
+roll_n(3)
+
+mc_table <- function(n, cumavg=T){
+  
+  output <- matrix(data=NA, nrow=n, ncol=3)
+  output <- as.data.frame(output)
+  output[ ,1] <- 1:n
+  output[ ,2] <- roll_n(n)
+  if (cumavg) output[, 3] <- cumsum(output[,2]) / output[,1]
+  colnames(output) <- c("n", "roll", "cumavg")
+  return(output)
+}
+```
+
+Let's run 2 million simulations and see what that looks like.
+```{r seed, echo=FALSE}
+set.seed(9876)
+options(digits = 4)
+```
+
+```{r sim, message=FALSE, cache=TRUE}
+riddler <- mc_table(2000000)
+```
+
+First, I explore the data by simply plotting the scores. It seems to converge somewhere between 0.47 and 0.48.
+
+```{r plot1, echo=FALSE, warning=FALSE, cache=TRUE}
+library(ggplot2)
+ggplot(riddler, aes(x=n, y=cumavg)) +geom_line(color='orange', size=1.1) +theme_bw() +
+  scale_y_continuous(limits = c(0.47,0.48)) +
+  labs(x='Number of scores',y='Cumulative average of scores',title='Riddler Classic: How Low Can You Roll?', subtitle='Cumulative average', caption='By @cortinah, Nov 17, 2019')
+```
+
+
+To get a better understanding of the scores the game is generating let's estimate the probability density function of the process using kernel estimates, as well as the corresponding cumulative density.
+
+Now it is much easier to see how the gaps between scores shrink as we move from 0 to 1. Games that start with a low number such as 0, 1, or 2 remain tightly concentrated near the initial value, while games that start with a higher value such as 7, 8, or 9 can "spread out". The CDF shows a staircase pattern which becomes less jagged as the score increases due to the samaller gaps in scores.
+
+```{r plot2, echo=FALSE, warning=FALSE, cache=TRUE}
+ggplot(riddler, aes(roll)) +geom_density(color='orange', size=1.2, fill='orange',bw=0.0001) +theme_bw()  +scale_x_continuous(breaks=seq(0,1,0.1)) +
+  labs(x='Score',y='Density',title='Riddler Classic: How Low Can You Roll?', subtitle='Density Function of Scores', caption='By @cortinah, Nov 17, 2019')
+
+ggplot(riddler, aes(roll)) +stat_ecdf(color='orange', size=1.1) +scale_x_continuous(breaks=seq(0,1,0.1))  +scale_y_continuous(breaks=seq(0,1,0.1)) +theme_bw() +
+    labs(x='Score',y='Cumulative Density',title='Riddler Classic: How Low Can You Roll?', subtitle='Cumulative Density Function of Scores', caption='By @cortinah, Nov 17, 2019')
+
+```
+
+## What's the final answer?
+
+Below is the calculation of the average score and its standard error. I use the standard devation divided by the square root of the number of observations to get standard deviation.
+
+```{r final}
+mean(riddler[,2])
+sd(riddler[,2])/sqrt(2000000)
+```
+
+And the answer is... 0.4736 with a standard deviation of 0.0002141.  A 95% confidence interval for the average score is (0.4731, 0.4740). It's not obvious (at least to me) from the construction of the problem that the average would be near 0.47, or even below 0.5. 
+
+
+Thanks for reading!

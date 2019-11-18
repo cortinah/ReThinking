@@ -1,0 +1,73 @@
+---
+title: 'Riddler Classic: How Low Can You Roll?'
+author: Hernando Cortina
+date: '2019-11-17'
+slug: riddler-classic-how-low-can-you-roll
+categories:
+  - Puzzles
+tags:
+  - Riddler
+---
+
+
+
+{{% tweet "1195330849224441857" %}}
+<div id="whats-the-average-score-of-the-game" class="section level2">
+<h2>What’s the average score of the game?</h2>
+<p>In this week’s <a href="https://fivethirtyeight.com/features/how-low-can-you-roll/">FiveThirtyEight Riddler Classic</a> we are asked to calculate the average of series of scores, based on rolls of classic D&amp;D style 10-sided die. The twist is that your score is the value of the die divided by 10, and you keep rolling the die over and over until you roll a zero. Each time you roll, if the digit shown by the die is less than or equal to the last digit of your score, then that roll becomes the new last digit of your score. Otherwise you just go ahead and roll again until you roll a zero.</p>
+<p>I simulated one game in R as show below. I generate 150 digits between 0-9 (just to be safe) and keep them until hitting the first zero. Then I check every digit and eliminate it if it’s greater than the prior digit. Last step is to divide each digit by the appropriate power of 10 and sum them.</p>
+<pre class="r"><code>roll &lt;- function() {
+    draws &lt;- sample(0:9, 150, replace = T)
+    if (draws[1]==0) return(0)
+    draws &lt;- draws[1:min(which(draws==0))]
+    lastgood &lt;- draws[1]
+
+for (i in 2:length(draws)){
+  
+  if (draws[i]==0) break
+  if (draws[i] &gt; lastgood) {draws[i] &lt;- NA}
+  else lastgood &lt;- draws[i]
+                          }
+draws &lt;- draws[!is.na(draws)]
+
+return(sum(draws/(10^seq_along(draws))))
+}
+
+roll()</code></pre>
+<pre><code>## [1] 0.9333322</code></pre>
+<p>Next, I create a function to generate n such digits, as well as a function to create a table with them and compute the rolling average:</p>
+<pre class="r"><code>roll_n &lt;- function(n){
+  output &lt;- numeric(n)
+  for (i in seq_len(n)) output[i] &lt;- roll()
+  return(output)
+}
+roll_n(3)</code></pre>
+<pre><code>## [1] 0.7432 0.1110 0.1000</code></pre>
+<pre class="r"><code>mc_table &lt;- function(n, cumavg=T){
+  
+  output &lt;- matrix(data=NA, nrow=n, ncol=3)
+  output &lt;- as.data.frame(output)
+  output[ ,1] &lt;- 1:n
+  output[ ,2] &lt;- roll_n(n)
+  if (cumavg) output[, 3] &lt;- cumsum(output[,2]) / output[,1]
+  colnames(output) &lt;- c(&quot;n&quot;, &quot;roll&quot;, &quot;cumavg&quot;)
+  return(output)
+}</code></pre>
+<p>Let’s run 2 million simulations and see what that looks like.</p>
+<pre class="r"><code>riddler &lt;- mc_table(2000000)</code></pre>
+<p>First, I explore the data by simply plotting the scores. It seems to converge somewhere between 0.47 and 0.48.</p>
+<p><img src="/post/2019-11-17-riddler-classic-how-low-can-you-roll_files/figure-html/plot1-1.png" width="672" /></p>
+<p>To get a better understanding of the scores the game is generating let’s estimate the probability density function of the process using kernel estimates, as well as the corresponding cumulative density.</p>
+<p>Now it is much easier to see how the gaps between scores shrink as we move from 0 to 1. Games that start with a low number such as 0, 1, or 2 remain tightly concentrated near the initial value, while games that start with a higher value such as 7, 8, or 9 can “spread out”. The CDF shows a staircase pattern which becomes less jagged as the score increases due to the samaller gaps in scores.</p>
+<p><img src="/post/2019-11-17-riddler-classic-how-low-can-you-roll_files/figure-html/plot2-1.png" width="672" /><img src="/post/2019-11-17-riddler-classic-how-low-can-you-roll_files/figure-html/plot2-2.png" width="672" /></p>
+</div>
+<div id="whats-the-final-answer" class="section level2">
+<h2>What’s the final answer?</h2>
+<p>Below is the calculation of the average score and its standard error. I use the standard devation divided by the square root of the number of observations to get standard deviation.</p>
+<pre class="r"><code>mean(riddler[,2])</code></pre>
+<pre><code>## [1] 0.4736</code></pre>
+<pre class="r"><code>sd(riddler[,2])/sqrt(2000000)</code></pre>
+<pre><code>## [1] 0.0002141</code></pre>
+<p>And the answer is… 0.4736 with a standard deviation of 0.0002141. A 95% confidence interval for the average score is (0.4731, 0.4740). It’s not obvious (at least to me) from the construction of the problem that the average would be near 0.47, or even below 0.5.</p>
+<p>Thanks for reading!</p>
+</div>
