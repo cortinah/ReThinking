@@ -34,7 +34,7 @@ return(sum(draws/(10^seq_along(draws))))
 }
 
 roll()</code></pre>
-<pre><code>## [1] 0.7</code></pre>
+<pre><code>## [1] 0.83211</code></pre>
 <p>Next, I create a function to generate n such digits, as well as a function to create a table with them and compute the rolling average:</p>
 <pre class="r"><code>roll_n &lt;- function(n){
   output &lt;- numeric(n)
@@ -42,7 +42,7 @@ roll()</code></pre>
   return(output)
 }
 roll_n(3)</code></pre>
-<pre><code>## [1] 0.0000000 0.9554311 0.2200000</code></pre>
+<pre><code>## [1] 0.4332 0.2200 0.9882</code></pre>
 <pre class="r"><code>mc_table &lt;- function(n, cumavg=T){
   
   output &lt;- matrix(data=NA, nrow=n, ncol=3)
@@ -63,7 +63,7 @@ roll_n(3)</code></pre>
 </div>
 <div id="whats-the-final-answer" class="section level2">
 <h2>What’s the final answer?</h2>
-<p>Below is the calculation of the average score and its standard error. I use the standard devation divided by the square root of the number of observations to get standard deviation.</p>
+<p>Below is the calculation of the average score and its standard error. I use the standard deviation divided by the square root of the number of observations to get standard error.</p>
 <pre class="r"><code>mean(riddler[,2])</code></pre>
 <pre><code>## [1] 0.4736</code></pre>
 <pre class="r"><code>sd(riddler[,2])/sqrt(2000000)</code></pre>
