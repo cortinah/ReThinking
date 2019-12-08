@@ -30,9 +30,9 @@ $$
 \frac{1}{(0.42-r)^{2}}-50 =0
 $$
 
-Which has a root at 0.2785, which we round to 0.28, or song 28. Accordingly, we should hit the random key unless the current song is between 28 and 42.
+Which has a root at 0.2785, which we round to 0.28, or song 28. Accordingly, we should keep pressing the "random" key unless the current song is between numbers 28 and 42.
 
-Let's simulate this strategy with one million trials, and look at the distribution of results and the average number of clicks needed by following this strategy.
+Let's simulate this strategy with one million trials, and look at the distribution of results and the average number of clicks needed by following this strategy. 
 
 ```{r roll, message=FALSE}
 library(tidyverse)
@@ -63,7 +63,7 @@ plays <- playlist(1000000)
 plays_sum <- plays %>% group_by(origin) %>%
   summarize(arrows=mean(arrows), randoms=mean(randoms))
   
-plays %>% summarize(round(mean(arrows+randoms),3))
+plays %>% summarize(clicks=round(mean(arrows+randoms),1))
 ```
 
 ## Plotting the Results
@@ -80,4 +80,4 @@ plays_sum %>%
   geom_vline(xintercept = 42, size=2) +scale_x_continuous(breaks=seq(0, 100, 10))
 ```
 
-The chart shows the number of clicks of the next and random keys from every starting position.  When you are below, but within 14 songs of 42, the random key is not used.  It takes on average about 12.7 total key presses to get to song [42](https://hitchhikers.fandom.com/wiki/42)!  If you had both a "next" and "previous" key, it would only take 9 key pressses on average.
+The chart shows the number of clicks of the "next" and "random" keys from every starting position.  When you start below, but within 14 songs of 42, the "random" key isn't used.  It takes on average about 12.7 total key presses to get to song [42](https://hitchhikers.fandom.com/wiki/42)!  If you had both a "next" and "previous" key, it would only take 9 key pressses on average.

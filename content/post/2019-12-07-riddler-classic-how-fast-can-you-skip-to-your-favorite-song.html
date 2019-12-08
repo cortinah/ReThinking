@@ -27,7 +27,7 @@ The number of “random” clicks is the reciprocal of the probability of fallin
 <p><span class="math display">\[
 \frac{1}{(0.42-r)^{2}}-50 =0
 \]</span></p>
-<p>Which has a root at 0.2785, which we round to 0.28, or song 28. Accordingly, we should hit the random key unless the current song is between 28 and 42.</p>
+<p>Which has a root at 0.2785, which we round to 0.28, or song 28. Accordingly, we should keep pressing the “random” key unless the current song is between numbers 28 and 42.</p>
 <p>Let’s simulate this strategy with one million trials, and look at the distribution of results and the average number of clicks needed by following this strategy.</p>
 <pre class="r"><code>library(tidyverse)
 
@@ -57,12 +57,12 @@ plays &lt;- playlist(1000000)
 plays_sum &lt;- plays %&gt;% group_by(origin) %&gt;%
   summarize(arrows=mean(arrows), randoms=mean(randoms))
   
-plays %&gt;% summarize(round(mean(arrows+randoms),3))</code></pre>
-<pre><code>##   round(mean(arrows + randoms), 3)
-## 1                           12.669</code></pre>
+plays %&gt;% summarize(clicks=round(mean(arrows+randoms),1))</code></pre>
+<pre><code>##   clicks
+## 1   12.7</code></pre>
 </div>
 <div id="plotting-the-results" class="section level2">
 <h2>Plotting the Results</h2>
 <p><img src="/post/2019-12-07-riddler-classic-how-fast-can-you-skip-to-your-favorite-song_files/figure-html/plot-1.png" width="672" /></p>
-<p>The chart shows the number of clicks of the next and random keys from every starting position. When you are below, but within 14 songs of 42, the random key is not used. It takes on average about 12.7 total key presses to get to song <a href="https://hitchhikers.fandom.com/wiki/42">42</a>! If you had both a “next” and “previous” key, it would only take 9 key pressses on average.</p>
+<p>The chart shows the number of clicks of the “next” and “random” keys from every starting position. When you start below, but within 14 songs of 42, the “random” key isn’t used. It takes on average about 12.7 total key presses to get to song <a href="https://hitchhikers.fandom.com/wiki/42">42</a>! If you had both a “next” and “previous” key, it would only take 9 key pressses on average.</p>
 </div>
