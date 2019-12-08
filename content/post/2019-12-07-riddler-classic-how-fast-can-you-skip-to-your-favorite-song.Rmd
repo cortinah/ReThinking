@@ -22,7 +22,7 @@ We set r between 0 and 0.5 as the breakpoint above which we use the "next" butto
 $$
 \text{Number of key presses} = random + next = \frac{1}{0.42-r} + \frac{0.42-r}{2}\dot{}100
 $$
-The number of "next" key presses needs to be divided by two because the expected value would be in the middle of the range.
+The number of "random" clicks is the reciprocal of the probability of falling in the range. The number of "next" key presses is (0.42 - r)*100, which needs to be divided by two because the expected value would be in the middle of the range.
 
 Setting the first derivative to zero to minimize, we have:
 

@@ -22,7 +22,7 @@ tags:
 <p><span class="math display">\[
 \text{Number of key presses} = random + next = \frac{1}{0.42-r} + \frac{0.42-r}{2}\dot{}100
 \]</span>
-The number of “next” key presses needs to be divided by two because the expected value would be in the middle of the range.</p>
+The number of “random” clicks is the reciprocal of the probability of falling in the range. The number of “next” key presses is (0.42 - r)*100, which needs to be divided by two because the expected value would be in the middle of the range.</p>
 <p>Setting the first derivative to zero to minimize, we have:</p>
 <p><span class="math display">\[
 \frac{1}{(0.42-r)^{2}}-50 =0
@@ -59,7 +59,7 @@ plays_sum &lt;- plays %&gt;% group_by(origin) %&gt;%
   
 plays %&gt;% summarize(round(mean(arrows+randoms),3))</code></pre>
 <pre><code>##   round(mean(arrows + randoms), 3)
-## 1                           12.666</code></pre>
+## 1                           12.669</code></pre>
 </div>
 <div id="plotting-the-results" class="section level2">
 <h2>Plotting the Results</h2>
