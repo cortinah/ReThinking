@@ -14,10 +14,10 @@ tags:
 
 ## How Fast Can You Skip to Your Favorite Song?
 
-In this week's [FiveThirtyEight Riddler Classic](https://fivethirtyeight.com/features/how-fast-can-you-skip-to-your-favorite-song/) we are asked for the optimical strategy to play song number [42](http://news.mit.edu/2019/answer-life-universe-and-everything-sum-three-cubes-mathematics-0910) on your 100-song playlist, starting from a random position, with only next song, and random song buttons. Also, on average how many clicks will you need to get to that song?
+In this week's [FiveThirtyEight Riddler Classic](https://fivethirtyeight.com/features/how-fast-can-you-skip-to-your-favorite-song/) we are asked for the optimal strategy to play song number [42](http://news.mit.edu/2019/answer-life-universe-and-everything-sum-three-cubes-mathematics-0910) on your 100-song playlist, starting from a random position, with only "next song", and "random song" buttons. Also, on average how many clicks will you need to get to that song?
 
 ## Proposed Solution
-We set r between 0 and 0.5 as the breakpoint above which we use next key. We always use the random key if the current position between 43 and 100.
+We set r between 0 and 0.5 as the breakpoint above which we use the "next" button. We always use the random key if the current position is between 43 and 100.
 
 $$
 \text{Number of key presses} = random + next = \frac{1}{0.42-r} + \frac{0.42-r}{2}\dot{}100
@@ -32,7 +32,7 @@ $$
 
 Which has a root at 0.2785, which we round to 0.28, or song 28. Accordingly, we should hit the random key unless the current song is between 28 and 42.
 
-Let's simulate this with one million trials, and look at the distribution of results and the average number of clicks needed by following this strategy.
+Let's simulate this strategy with one million trials, and look at the distribution of results and the average number of clicks needed by following this strategy.
 
 ```{r roll, message=FALSE}
 library(tidyverse)

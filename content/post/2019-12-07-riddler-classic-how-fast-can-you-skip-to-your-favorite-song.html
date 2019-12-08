@@ -14,11 +14,11 @@ tags:
 {{% tweet "1202952594332803073" %}}
 <div id="how-fast-can-you-skip-to-your-favorite-song" class="section level2">
 <h2>How Fast Can You Skip to Your Favorite Song?</h2>
-<p>In this week’s <a href="https://fivethirtyeight.com/features/how-fast-can-you-skip-to-your-favorite-song/">FiveThirtyEight Riddler Classic</a> we are asked for the optimical strategy to play song number <a href="http://news.mit.edu/2019/answer-life-universe-and-everything-sum-three-cubes-mathematics-0910">42</a> on your 100-song playlist, starting from a random position, with only next song, and random song buttons. Also, on average how many clicks will you need to get to that song?</p>
+<p>In this week’s <a href="https://fivethirtyeight.com/features/how-fast-can-you-skip-to-your-favorite-song/">FiveThirtyEight Riddler Classic</a> we are asked for the optimal strategy to play song number <a href="http://news.mit.edu/2019/answer-life-universe-and-everything-sum-three-cubes-mathematics-0910">42</a> on your 100-song playlist, starting from a random position, with only “next song”, and “random song” buttons. Also, on average how many clicks will you need to get to that song?</p>
 </div>
 <div id="proposed-solution" class="section level2">
 <h2>Proposed Solution</h2>
-<p>We set r between 0 and 0.5 as the breakpoint above which we use next key. We always use the random key if the current position between 43 and 100.</p>
+<p>We set r between 0 and 0.5 as the breakpoint above which we use the “next” button. We always use the random key if the current position is between 43 and 100.</p>
 <p><span class="math display">\[
 \text{Number of key presses} = random + next = \frac{1}{0.42-r} + \frac{0.42-r}{2}\dot{}100
 \]</span>
@@ -28,7 +28,7 @@ The number of “next” key presses needs to be divided by two because the expe
 \frac{1}{(0.42-r)^{2}}-50 =0
 \]</span></p>
 <p>Which has a root at 0.2785, which we round to 0.28, or song 28. Accordingly, we should hit the random key unless the current song is between 28 and 42.</p>
-<p>Let’s simulate this with one million trials, and look at the distribution of results and the average number of clicks needed by following this strategy.</p>
+<p>Let’s simulate this strategy with one million trials, and look at the distribution of results and the average number of clicks needed by following this strategy.</p>
 <pre class="r"><code>library(tidyverse)
 
 playlist &lt;- function(rounds=100){
@@ -59,7 +59,7 @@ plays_sum &lt;- plays %&gt;% group_by(origin) %&gt;%
   
 plays %&gt;% summarize(round(mean(arrows+randoms),3))</code></pre>
 <pre><code>##   round(mean(arrows + randoms), 3)
-## 1                           12.652</code></pre>
+## 1                           12.666</code></pre>
 </div>
 <div id="plotting-the-results" class="section level2">
 <h2>Plotting the Results</h2>
