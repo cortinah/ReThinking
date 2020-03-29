@@ -31,7 +31,7 @@ tags:
     }  
   return(count)
 }</code></pre>
-<p>We play the dice game 20,000 times and find that the average number of times the dice are rolled is 9.7 with a standard deviation of 0.04. The median number of times the dice are rolled is 8.</p>
+<p>We play the dice game 20,000 times and find that the average number of times the dice are rolled is 9.7 with a standard error of 0.04. The median number of times the dice are rolled is 8.</p>
 <pre class="r"><code>set.seed(12345)
 games &lt;- replicate(20000, dice_game(), simplify = T)
 mean(games)</code></pre>

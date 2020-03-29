@@ -34,7 +34,7 @@ dice_game <- function(n=6) {
 ```
 
 
-We play the dice game 20,000 times and find that the average number of times the dice are rolled is 9.7 with a standard deviation of 0.04.  The median number of times the dice are rolled is 8.  
+We play the dice game 20,000 times and find that the average number of times the dice are rolled is 9.7 with a standard error of 0.04.  The median number of times the dice are rolled is 8.  
 
 ```{r replicate, message=FALSE}
 set.seed(12345)
