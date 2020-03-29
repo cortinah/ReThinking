@@ -1,0 +1,108 @@
+---
+title: 'Riddler Classic: Re-Rolling a Die'
+author: Hernando Cortina
+date: '2020-03-29'
+slug: riddler-classic-re-rolling-a-die
+categories:
+  - Puzzles
+tags:
+  - Riddler
+---
+
+`r blogdown::shortcode("tweet", "1243537599626690565")`
+
+
+## Rolling (and Re-Rolling) a Die:
+In this week's [FiveThirtyEight Riddler Classic](https://fivethirtyeight.com/features/can-you-get-the-gloves-out-of-the-box/) we start with a fair six-sided die and roll it six times, recording the results of each roll. We write these numbers on the six faces of another fair die. Next, we roll this second die six times and take those six numbers and write them on the faces of yet another die, continuing this process of generating a new die from the previous one. The question is: what is the average number of rolls it will take to get a die with the same number on all its faces?
+
+## Proposed Solution:
+While an analytical solution seems feasible, simulating and plotting this process seems quite straightforward. Simulating also makes it straightforward to generalize to n-sided dies.  The R code below loops through the six die rolls, assigning the results to the faces of a new die, until all of the faces have the same number. We look at combined violin/boxplots of the simulation.
+
+```{r code, message=FALSE}
+dice_game <- function(n=6) {
+  rolls <- sample(n, n, replace=TRUE)
+  unique_rolls <- unique(rolls)
+  count <- 1
+
+  while(length(unique_rolls) > 1) {
+    rolls <- sample(rolls, n, replace=T)
+    unique_rolls <- unique(rolls)
+    count <- count + 1
+    }  
+  return(count)
+}
+```
+
+
+We play the dice game 20,000 times and find that the average number of times the dice are rolled is 9.7 with a standard deviation of 0.04.  The median number of times the dice are rolled is 8.  
+
+```{r replicate, message=FALSE}
+set.seed(12345)
+games <- replicate(20000, dice_game(), simplify = T)
+mean(games)
+fivenum(games)
+sd(games)/sqrt(length(games))
+```
+
+
+## Violin Plot of the Six-Sided Simulation:
+As shown, most games last between six and twelve rounds, but particularly skilled dice throwers can have games that last nearly seventy rounds, or even just one round.
+
+```{r plot, message=FALSE, echo=FALSE}
+library(ggplot2)
+games <- as.data.frame(games)
+
+ggplot(games, aes(x=6, y=games, fill=6)) +geom_violin(width=1.4, size=1, color='grey') +
+  scale_x_discrete() +geom_boxplot(color='grey', width=0.2, outlier.shape=NA, size=1) +
+  scale_fill_viridis_c() +theme_minimal(base_size = 12) +
+  labs(title='FiveThirtyEight Riddler Classic: Re-Rolling a Die',
+       subtitle='Distribution of roll repetitions; mean=9.7; median=8',
+       y='Roll Repetitions', x='Six-sided die', caption='By: @cortinah, 2020-03-29') +
+  theme(legend.position = "none") +scale_y_continuous(breaks = seq(0,60,10))
+```
+
+## What About Other Dice?
+For extra credit, we show below the results of the same simulation for eight, ten, twelve, and twenty-sided dies, which of course take longer than the six-sided die.  Now, where is that old AD&D set...?
+
+```{r many, message=FALSE, echo=FALSE, warning=FALSE}
+games_8 <- replicate(20000, dice_game(8), simplify = T)
+games_10 <- replicate(20000, dice_game(10), simplify = T)
+
+games_8 <- as.data.frame(games_8)
+games_10 <- as.data.frame(games_10)
+
+games_8 <- cbind(games, games_8, games_10)
+colnames(games_8) <- c('Six', 'Eight','Ten')
+library(tidyr)
+games_8 <- gather(games_8)
+
+ggplot(games_8, aes(x=key, y=value, fill=key)) +geom_violin(width=1, size=1, color='grey') +
+  scale_x_discrete(limits = c('Six','Eight','Ten')) +
+  geom_boxplot(color='white', width=0.2, outlier.shape=NA, size=1) +
+  scale_fill_viridis_d(option = 'D') +theme_minimal(base_size = 12) +
+  labs(title='FiveThirtyEight Riddler Classic: Re-Rolling a Die',
+       subtitle='Distribution of roll repetitions',
+       y='Roll Repetitions', x='Number of Sides in Die', caption='By: @cortinah, 2020-03-29') +
+  theme(legend.position = "none") +scale_y_continuous(breaks = seq(0,125,25))
+
+
+games_12 <- replicate(20000, dice_game(12), simplify = T)
+games_20 <- replicate(20000, dice_game(20), simplify = T)
+
+games_12 <- as.data.frame(games_12)
+games_20 <- as.data.frame(games_20)
+
+games_12 <- cbind(games, games_12, games_20)
+colnames(games_12) <- c('Six', 'Twelve','Twenty')
+
+games_12 <- gather(games_12)
+
+ggplot(games_12, aes(x=key, y=value, fill=key)) +geom_violin(width=1.4, size=1, color='grey') +
+  scale_x_discrete(limits = c('Six','Twelve','Twenty')) +
+  geom_boxplot(color='white', width=0.15, outlier.shape=NA, size=0.8) +
+  scale_fill_viridis_d(option = 'C') +theme_minimal(base_size = 12) +
+  labs(title='FiveThirtyEight Riddler Classic: Re-Rolling a Die',
+       subtitle='Distribution of roll repetitions',
+       y='Roll Repetitions', x='Number of Sides in Die', caption='By: @cortinah, 2020-03-29') +
+  theme(legend.position = "none") +scale_y_continuous(breaks = seq(0,225,25))
+```

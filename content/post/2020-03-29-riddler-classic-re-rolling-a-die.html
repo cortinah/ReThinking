@@ -1,0 +1,53 @@
+---
+title: 'Riddler Classic: Re-Rolling a Die'
+author: Hernando Cortina
+date: '2020-03-29'
+slug: riddler-classic-re-rolling-a-die
+categories:
+  - Puzzles
+tags:
+  - Riddler
+---
+
+
+
+{{% tweet "1243537599626690565" %}}
+<div id="rolling-and-re-rolling-a-die" class="section level2">
+<h2>Rolling (and Re-Rolling) a Die:</h2>
+<p>In this week’s <a href="https://fivethirtyeight.com/features/can-you-get-the-gloves-out-of-the-box/">FiveThirtyEight Riddler Classic</a> we start with a fair six-sided die and roll it six times, recording the results of each roll. We write these numbers on the six faces of another fair die. Next, we roll this second die six times and take those six numbers and write them on the faces of yet another die, continuing this process of generating a new die from the previous one. The question is: what is the average number of rolls it will take to get a die with the same number on all its faces?</p>
+</div>
+<div id="proposed-solution" class="section level2">
+<h2>Proposed Solution:</h2>
+<p>While an analytical solution seems feasible, simulating and plotting this process seems quite straightforward. Simulating also makes it straightforward to generalize to n-sided dies. The R code below loops through the six die rolls, assigning the results to the faces of a new die, until all of the faces have the same number. We look at combined violin/boxplots of the simulation.</p>
+<pre class="r"><code>dice_game &lt;- function(n=6) {
+  rolls &lt;- sample(n, n, replace=TRUE)
+  unique_rolls &lt;- unique(rolls)
+  count &lt;- 1
+
+  while(length(unique_rolls) &gt; 1) {
+    rolls &lt;- sample(rolls, n, replace=T)
+    unique_rolls &lt;- unique(rolls)
+    count &lt;- count + 1
+    }  
+  return(count)
+}</code></pre>
+<p>We play the dice game 20,000 times and find that the average number of times the dice are rolled is 9.7 with a standard deviation of 0.04. The median number of times the dice are rolled is 8.</p>
+<pre class="r"><code>set.seed(12345)
+games &lt;- replicate(20000, dice_game(), simplify = T)
+mean(games)</code></pre>
+<pre><code>## [1] 9.71325</code></pre>
+<pre class="r"><code>fivenum(games)</code></pre>
+<pre><code>## [1]  1  6  8 12 68</code></pre>
+<pre class="r"><code>sd(games)/sqrt(length(games))</code></pre>
+<pre><code>## [1] 0.0420899</code></pre>
+</div>
+<div id="violin-plot-of-the-six-sided-simulation" class="section level2">
+<h2>Violin Plot of the Six-Sided Simulation:</h2>
+<p>As shown, most games last between six and twelve rounds, but particularly skilled dice throwers can have games that last nearly seventy rounds, or even just one round.</p>
+<p><img src="/post/2020-03-29-riddler-classic-re-rolling-a-die_files/figure-html/plot-1.png" width="672" /></p>
+</div>
+<div id="what-about-other-dice" class="section level2">
+<h2>What About Other Dice?</h2>
+<p>For extra credit, we show below the results of the same simulation for eight, ten, twelve, and twenty-sided dies, which of course take longer than the six-sided die. Now, where is that old AD&amp;D set…?</p>
+<p><img src="/post/2020-03-29-riddler-classic-re-rolling-a-die_files/figure-html/many-1.png" width="672" /><img src="/post/2020-03-29-riddler-classic-re-rolling-a-die_files/figure-html/many-2.png" width="672" /></p>
+</div>
