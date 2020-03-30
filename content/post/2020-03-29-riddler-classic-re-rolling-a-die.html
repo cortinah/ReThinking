@@ -18,14 +18,14 @@ tags:
 </div>
 <div id="proposed-solution" class="section level2">
 <h2>Proposed Solution:</h2>
-<p>While an analytical solution seems feasible, simulating and plotting this process seems quite straightforward. Simulating also makes it straightforward to generalize to n-sided dies. The R code below loops through the six die rolls, assigning the results to the faces of a new die, until all of the faces have the same number. We look at combined violin/boxplots of the simulation.</p>
+<p>While an analytical solution seems feasible, simulating and plotting this process is quite straightforward. Simulating also makes it simple to generalize to n-sided dies. The R code below loops through the six die rolls, assigning the results to the faces of a new die, until all of the faces have the same number. We look at combined violin/boxplots of the simulation.</p>
 <pre class="r"><code>dice_game &lt;- function(n=6) {
   rolls &lt;- sample(n, n, replace=TRUE)
   unique_rolls &lt;- unique(rolls)
   count &lt;- 1
 
   while(length(unique_rolls) &gt; 1) {
-    rolls &lt;- sample(rolls, n, replace=T)
+    rolls &lt;- sample(rolls, n, replace=TRUE)
     unique_rolls &lt;- unique(rolls)
     count &lt;- count + 1
     }  

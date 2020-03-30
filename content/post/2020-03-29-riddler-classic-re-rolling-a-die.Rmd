@@ -16,7 +16,7 @@ tags:
 In this week's [FiveThirtyEight Riddler Classic](https://fivethirtyeight.com/features/can-you-get-the-gloves-out-of-the-box/) we start with a fair six-sided die and roll it six times, recording the results of each roll. We write these numbers on the six faces of another fair die. Next, we roll this second die six times and take those six numbers and write them on the faces of yet another die, continuing this process of generating a new die from the previous one. The question is: what is the average number of rolls it will take to get a die with the same number on all its faces?
 
 ## Proposed Solution:
-While an analytical solution seems feasible, simulating and plotting this process seems quite straightforward. Simulating also makes it straightforward to generalize to n-sided dies.  The R code below loops through the six die rolls, assigning the results to the faces of a new die, until all of the faces have the same number. We look at combined violin/boxplots of the simulation.
+While an analytical solution seems feasible, simulating and plotting this process is quite straightforward. Simulating also makes it simple to generalize to n-sided dies.  The R code below loops through the six die rolls, assigning the results to the faces of a new die, until all of the faces have the same number. We look at combined violin/boxplots of the simulation.
 
 ```{r code, message=FALSE}
 dice_game <- function(n=6) {
@@ -25,7 +25,7 @@ dice_game <- function(n=6) {
   count <- 1
 
   while(length(unique_rolls) > 1) {
-    rolls <- sample(rolls, n, replace=T)
+    rolls <- sample(rolls, n, replace=TRUE)
     unique_rolls <- unique(rolls)
     count <- count + 1
     }  
