@@ -11,7 +11,7 @@ tags:
 
 
 
-<p><img src="/post/2020-08-16-hockeystick_files/logo.png" style="width:50.0%" /></p>
+<p><img src="/post/2020-08-16-hockeystick_files/logo.png" style="width:45.0%" /></p>
 <div id="new-hockeystick-package-on-github" class="section level2">
 <h2>New hockeystick package on github</h2>
 <p>The goal of <code>hockeystick</code> is to make essential Climate Change datasets easily available to non-climate experts. <code>hockeystick</code> users can download the latest raw data from authoritative sources as well as view it via pre-defined ggplot2 charts. Datasets include atmospheric CO<sub>2</sub>, instrumental and ice-core temperature records, sea levels, and Arctic/Antarctic sea-ice. Additional visualizations using this data will be added over time.</p>
@@ -29,30 +29,30 @@ tags:
 <pre><code>## hockeystick: Use hockeystick_cache_details() to view cached climate data.</code></pre>
 <pre class="r"><code>ml_co2 &lt;- get_carbon()
 plot_carbon(ml_co2)</code></pre>
-<p><img src="/post/2020-08-16-hockeystick_files/figure-html/carbon-1.png" width="60%" /></p>
+<p><img src="/post/2020-08-16-hockeystick_files/figure-html/carbon-1.png" width="65%" /></p>
 <p>Retrieve NASA/GISS global surface temperature anomaly data and plot it:</p>
 <pre class="r"><code>anomaly &lt;- get_temp()
 plot_temp(anomaly)</code></pre>
-<p><img src="/post/2020-08-16-hockeystick_files/figure-html/temp-1.png" width="60%" /></p>
+<p><img src="/post/2020-08-16-hockeystick_files/figure-html/temp-1.png" width="65%" /></p>
 <p>Visualize warming using Ed Hawkins styled “warming stripes”:</p>
 <pre class="r"><code>warming_stripes()</code></pre>
-<p><img src="/post/2020-08-16-hockeystick_files/figure-html/stripes-1.png" width="60%" /></p>
+<p><img src="/post/2020-08-16-hockeystick_files/figure-html/stripes-1.png" width="65%" /></p>
 <pre class="r"><code>warming_stripes(stripe_only = TRUE, col_strip = viridisLite::viridis(11))</code></pre>
-<p><img src="/post/2020-08-16-hockeystick_files/figure-html/stripes2-1.png" width="53%" /></p>
+<p><img src="/post/2020-08-16-hockeystick_files/figure-html/stripes2-1.png" width="58%" /></p>
 <p>Retrieve tide gauge and satellite sea level data and plot it:</p>
 <pre class="r"><code>gmsl &lt;- get_sealevel()
 plot_sealevel(gmsl)</code></pre>
-<p><img src="/post/2020-08-16-hockeystick_files/figure-html/sl-1.png" width="60%" /></p>
+<p><img src="/post/2020-08-16-hockeystick_files/figure-html/sl-1.png" width="65%" /></p>
 <p>Retrieve July annual Arctic Sea Ice Index and plot it:</p>
 <pre class="r"><code>seaice &lt;- get_seaice()</code></pre>
 <pre><code>## Please set use_cache=FALSE if you are changing pole, month, or measure from last cached data.</code></pre>
 <pre class="r"><code>plot_seaice(seaice)</code></pre>
-<p><img src="/post/2020-08-16-hockeystick_files/figure-html/si-1.png" width="60%" /></p>
+<p><img src="/post/2020-08-16-hockeystick_files/figure-html/si-1.png" width="65%" /></p>
 <p><code>get_seaice()</code> arguments can be modified to download Antarctic sea ice, and allow any month.</p>
 <p>Retrieve Vostok ice core data and plot it:</p>
 <pre class="r"><code>vostok &lt;- get_paleo()
 plot_paleo(vostok)</code></pre>
-<p><img src="/post/2020-08-16-hockeystick_files/figure-html/paleo-1.png" width="64%" /></p>
+<p><img src="/post/2020-08-16-hockeystick_files/figure-html/paleo-1.png" width="69%" /></p>
 <div id="managing-the-cache" class="section level3">
 <h3>Managing the cache</h3>
 <p>Data is cached for future use the first time it is downloaded using any of the <code>get_</code> functions. To view the files, date, and size of cached info use <code>hockeystick_cache_details()</code>. To re-download or update data from the source use the <code>use_cache = FALSE</code> argument in any of the <code>get_</code> functions, for example: <code>get_carbon(use_cache = FALSE)</code>. To delete all cached data use <code>hockeystick_cache_delete_all()</code>.</p>
