@@ -28,7 +28,7 @@ remotes::install_github("cortinah/hockeystick")
 
 Retrieve NOAA/ESRL Mauna Loa CO<sub>2</sub> Observatory concentration data and plot it:
 
-```{r carbon, out.width='65%', fig.retina=2}
+```{r carbon, out.width='70%', fig.retina=2}
 library(hockeystick)
 ml_co2 <- get_carbon()
 plot_carbon(ml_co2)
@@ -36,29 +36,29 @@ plot_carbon(ml_co2)
 
 Retrieve NASA/GISS global surface temperature anomaly data and plot it:
 
-```{r temp, out.width='65%', fig.retina=2}
+```{r temp, out.width='70%', fig.retina=2}
 anomaly <- get_temp()
 plot_temp(anomaly)
 ```
 
 Visualize warming using Ed Hawkins styled "warming stripes":
-```{r stripes, out.width='65%', fig.retina=2}
+```{r stripes, out.width='70%', fig.retina=2}
 warming_stripes()
 ```
-```{r stripes2, out.width='58%', fig.retina=2}
+```{r stripes2, out.width='63%', fig.retina=2}
 warming_stripes(stripe_only = TRUE, col_strip = viridisLite::viridis(11))
 ```
 
 Retrieve tide gauge and satellite sea level data and plot it:
 
-```{r sl, out.width='65%', fig.retina=2}
+```{r sl, out.width='70%', fig.retina=2}
 gmsl <- get_sealevel()
 plot_sealevel(gmsl)
 ```
 
 Retrieve July annual Arctic Sea Ice Index and plot it:
 
-```{r si, out.width='65%', fig.retina=2}
+```{r si, out.width='70%', fig.retina=2}
 seaice <- get_seaice()
 plot_seaice(seaice)
 ```
@@ -67,7 +67,7 @@ plot_seaice(seaice)
 
 Retrieve Vostok ice core data and plot it:
 
-```{r paleo, out.width='69%', fig.retina=2}
+```{r paleo, out.width='75%', fig.retina=2}
 vostok <- get_paleo()
 plot_paleo(vostok)
 ```
