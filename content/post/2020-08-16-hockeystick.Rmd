@@ -9,7 +9,7 @@ tags:
   - hockeystick
 ---
 
-![ ](/post/2020-08-16-_files/logo.png){width=50%}
+![ ](/post/2020-08-16-hockeystick_files/logo.png){width=50%}
 
 ## New hockeystick package on github
 The goal of `hockeystick` is to make essential Climate Change datasets easily available to non-climate experts. `hockeystick` users can download the latest raw data from authoritative sources as well as view it via pre-defined ggplot2 charts. Datasets include atmospheric CO<sub>2</sub>, instrumental and ice-core temperature records, sea levels, and Arctic/Antarctic sea-ice. Additional visualizations using this data will be added over time.
