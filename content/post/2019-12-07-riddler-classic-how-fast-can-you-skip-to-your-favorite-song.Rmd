@@ -9,7 +9,7 @@ tags:
   - Riddler
 ---
 
-`r blogdown::shortcode("tweet", "1202952594332803073")`
+`r blogdown::shortcode("tweet", user="ollie", id="1202952594332803073")`
 
 
 ## How Fast Can You Skip to Your Favorite Song?

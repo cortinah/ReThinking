@@ -9,7 +9,7 @@ tags:
   - Riddler
 ---
 
-`r blogdown::shortcode("tweet", "1243537599626690565")`
+`r blogdown::shortcode("tweet", user="ollie", id="1243537599626690565")`
 
 
 ## Rolling (and Re-Rolling) a Die:

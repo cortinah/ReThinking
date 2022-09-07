@@ -11,7 +11,7 @@ tags:
 
 ## An Election Probability Riddler Classic, Just in Time for November 6
 
-`r blogdown::shortcode("tweet", "1058350890225156098")`
+`r blogdown::shortcode("tweet", user="ollie", id="1058350890225156098")`
 
 This week's [FiveThirtyEight Riddler Classic](https://fivethirtyeight.com/features/how-far-would-you-go-to-rig-a-coin-flip/) was about winning elections, fair and square, or by any means necessary... In this case, it's Programmers versus Theorists, and elections are decided by flipping coins for each of one hundred Senate seats.  As an analyst for Riddler Nation’s wildly successful data-driven political blog, OneHundred, these are the questions we are confronted with today:
 
@@ -114,6 +114,6 @@ No, it wouldn't because the Theorists are checking the election results on an el
 ## Addendum
 As Riddler Nation star @laurentLessard pointed out, there is some ambiguity in the wording of these questions that necessitate some clarification:
 
-`r blogdown::shortcode("tweet", "1058476763737657345")`
+`r blogdown::shortcode("tweet", user="LaurentLessard", id="1058476763737657345")`
 
 In particular, the above results for questions 3-5 hold in an expected value sense, but not necessarily in a realized sense. Specifically, the Programmers may cheat by weighting the coin in a favorable way and still fail to beat the Theorists.  There is also the possibility that they nay tilt the odds in their favor more than the "optimal" and still fail to be detected.  Anything *could* happen, but the calculations above should hold "on average", if there were thousands of Riddler Nations out there.

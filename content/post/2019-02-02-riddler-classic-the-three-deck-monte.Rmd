@@ -9,7 +9,7 @@ tags:
 slug: riddler-classic-the-three-deck-monte
 ---
 
-`r blogdown::shortcode("tweet", "1091345144543133702")`
+`r blogdown::shortcode("tweet", user="ollie", id="1091345144543133702")`
 
 ## Should You Take the Three Deck Monte Bet?
 

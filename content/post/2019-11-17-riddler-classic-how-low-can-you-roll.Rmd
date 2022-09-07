@@ -9,7 +9,7 @@ tags:
   - Riddler
 ---
 
-`r blogdown::shortcode("tweet", "1195330849224441857")`
+`r blogdown::shortcode("tweet", user="ollie", id="1195330849224441857")`
 
 
 ## What's the average score of the game?

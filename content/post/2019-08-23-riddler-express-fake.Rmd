@@ -9,7 +9,7 @@ tags:
   - Riddler
 ---
 
-`r blogdown::shortcode("tweet", "1164882440990724097")`
+`r blogdown::shortcode("tweet", user="ollie", id="1164882440990724097")`
 
 
 

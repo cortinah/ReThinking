@@ -74,8 +74,8 @@ ggplot(bc,aes(x=Year,y=Count)) +geom_col(aes(fill=Count)) +theme_classic() +scal
 Twitter user @Cardlinger commented on the fact that the y axis seems to start at a negative value.  This allows for "zeros" on the chart to be clearly distinguished. Otherwise, with 99 bars, the small gaps between gaps caused by zeros would be difficult to identify.
 
 
-`r blogdown::shortcode("tweet", "984800244037771270")`
-`r blogdown::shortcode("tweet", "984800435973312513")`
+`r blogdown::shortcode("tweet", user="cortinah", id="984800244037771270")`
+`r blogdown::shortcode("tweet", user="Cardlinger", id="984800435973312513")`
 
 ### [Thanks, Ollie!](https://fivethirtyeight.com/features/can-you-find-the-perfect-poker-hand-can-you-shut-this-infernal-box/)
 

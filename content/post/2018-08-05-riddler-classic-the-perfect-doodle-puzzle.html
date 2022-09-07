@@ -14,7 +14,7 @@ tags:
 <div id="apologia" class="section level2">
 <h2>Apologia</h2>
 <p>It’s been quite a while since my last post and I regret that. I’ve been rather busy, mainly with <a href="https://justcapital.com/reports/introducing-the-just-etf/">this</a>. Now that’s <a href="https://www.gsam.com/content/gsam/us/en/individual/products/etf-fund-finder/goldman-sachs-just-u-s--large-cap-equity-etf.html">succesfully</a> out of the way I have a little more time to write a few words and post a little R code here. Despite the lack of blogging, I always seem to find the time for a little FiveThirtyEight <a href="https://fivethirtyeight.com/tag/the-riddler/">Riddler</a> puzzle. I was thrilled when a few weeks ago Riddler editor Oliver Roeder thought my simulation of dystopic <a href="https://fivethirtyeight.com/features/when-will-your-house-collapse-should-you-take-a-construction-contract/">row house collapse times</a> was <a href="https://fivethirtyeight.com/features/the-case-of-the-smudged-secret-message/">beautiful</a>. Here’s the viz:</p>
-{{% tweet "1003654868807110657" %}}
+<p>{{% tweet user="cortinah" id="1003654868807110657" %}}</p>
 <p>Seldom do people use that precise word regarding the finance-oriented kind of charts I usually make, and it was gratifying to hear that since I did focus on the aesthetics of that visualization. On this post I write about a more recent Riddler puzzle, this one is a little more code heavy, but I did manage to slip in a little <a href="http://colorbrewer2.org">colorbrewer</a> for a splash of color in the final result.</p>
 </div>
 <div id="on-the-july-27-2018-fivethirtyeight-riddler-classic" class="section level2">
@@ -117,5 +117,5 @@ ggplot(path,aes(x,y,fill=step)) +geom_tile() +scale_fill_distiller(direction = 1
 <div id="epilogue" class="section level2">
 <h2>Epilogue</h2>
 <p>Luke Benz clearly loves a good puzzle and I noticed he <a href="https://twitter.com/recspecs730/status/1025379762397749248">posted</a> a series of solutions not just for the 5x5 puzzle, but also for the 6x6, 7x7, and 8x8 versions. In the spirit of friendly competition I took a shot at the 9x9 variation. All that is required in the above code is to change the board matrix ncol and nrow to be 9x9, change the bounds checks in moves() to be 10 rather than 6, and change the size of the pos_hist list to 81. Of course, the complexity of the solution increases quadratically with the grid’s length. The code took a little while to find a solution, but when I got back from lunch, there it was. Much rejoicing ensued.</p>
-{{% tweet "1025449775804637185" %}}
+<p>{{% tweet user="cortinah" id="1025449775804637185" %}}</p>
 </div>

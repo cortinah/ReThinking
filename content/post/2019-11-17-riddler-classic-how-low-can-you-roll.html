@@ -11,7 +11,7 @@ tags:
 
 
 
-{{% tweet "1195330849224441857" %}}
+<p>{{% tweet user="ollie" id="1195330849224441857" %}}</p>
 <div id="whats-the-average-score-of-the-game" class="section level2">
 <h2>What’s the average score of the game?</h2>
 <p>In this week’s <a href="https://fivethirtyeight.com/features/how-low-can-you-roll/">FiveThirtyEight Riddler Classic</a> we are asked to calculate the average of series of scores, based on rolls of classic D&amp;D style 10-sided die. The twist is that your score is the value of the die divided by 10, and you keep rolling the die over and over until you roll a zero. Each time you roll, if the digit shown by the die is less than or equal to the last digit of your score, then that roll becomes the new last digit of your score. Otherwise you just go ahead and roll again until you roll a zero.</p>
@@ -34,7 +34,7 @@ return(sum(draws/(10^seq_along(draws))))
 }
 
 roll()</code></pre>
-<pre><code>## [1] 0.6511</code></pre>
+<pre><code>## [1] 0.2</code></pre>
 <p>Next, I create a function to generate n such digits, as well as a function to create a table with them and compute the rolling average:</p>
 <pre class="r"><code>roll_n &lt;- function(n){
   output &lt;- numeric(n)
@@ -42,7 +42,7 @@ roll()</code></pre>
   return(output)
 }
 roll_n(3)</code></pre>
-<pre><code>## [1] 0.1111 0.2220 0.7600</code></pre>
+<pre><code>## [1] 0.000000 0.210000 0.621111</code></pre>
 <pre class="r"><code>mc_table &lt;- function(n, cumavg=T){
   
   output &lt;- matrix(data=NA, nrow=n, ncol=3)
