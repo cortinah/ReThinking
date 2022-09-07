@@ -9,8 +9,6 @@ tags:
 slug: riddler-classic-the-three-deck-monte
 ---
 
-`r blogdown::shortcode("tweet", user="ollie", id="1091345144543133702")`
-
 ## Should You Take the Three Deck Monte Bet?
 
 This week's [FiveThirtyEight Riddler Classic](https://fivethirtyeight.com/features/can-you-escape-a-maze-without-walls/) is about whether you should play "Three Deck Monte" on a street corner. You pick one of three decks offered with all cards visible, and your opponent then picks one of the two others. After shuffling each deck you compete in a game similar to War. You each turn over cards one at a time, the one with a higher card wins that turn, and the first to win five turns wins the game. The decks look like this:  

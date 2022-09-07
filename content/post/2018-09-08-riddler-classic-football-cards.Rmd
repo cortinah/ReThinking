@@ -12,7 +12,6 @@ tags:
 
 ## Another Riddler Classic Simulation + Animation
 
-`r blogdown::shortcode("tweet", user="ollie", id="1038050924692942849")`
 
 This week's [FiveThirtyEight Riddler Classic](https://fivethirtyeight.com/features/id-like-to-use-my-riddler-lifeline/) presented another opportunity to simulate repeated sampling and visualize the results.  In this instance we needed to find the average number of unique 10-card samples needed to form a set of 100 unique cards.
 

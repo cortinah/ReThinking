@@ -9,9 +9,6 @@ tags:
   - Riddler
 ---
 
-`r blogdown::shortcode("tweet", user="ollie", id="1202952594332803073")`
-
-
 ## How Fast Can You Skip to Your Favorite Song?
 
 In this week's [FiveThirtyEight Riddler Classic](https://fivethirtyeight.com/features/how-fast-can-you-skip-to-your-favorite-song/) we are asked for the optimal strategy to play song number [42](http://news.mit.edu/2019/answer-life-universe-and-everything-sum-three-cubes-mathematics-0910) on your 100-song playlist, starting from a random position, with only "next song", and "random song" buttons. Also, on average how many clicks will you need to get to that song?

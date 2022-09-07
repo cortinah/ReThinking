@@ -11,7 +11,6 @@ tags:
 
 ## An Election Probability Riddler Classic, Just in Time for November 6
 
-`r blogdown::shortcode("tweet", user="ollie", id="1058350890225156098")`
 
 This week's [FiveThirtyEight Riddler Classic](https://fivethirtyeight.com/features/how-far-would-you-go-to-rig-a-coin-flip/) was about winning elections, fair and square, or by any means necessary... In this case, it's Programmers versus Theorists, and elections are decided by flipping coins for each of one hundred Senate seats.  As an analyst for Riddler Nation’s wildly successful data-driven political blog, OneHundred, these are the questions we are confronted with today:
 
