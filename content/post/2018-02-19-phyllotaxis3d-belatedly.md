@@ -40,7 +40,7 @@ The code is hosted on [Github](https://github.com/cortinah/ShinyPhyllotaxis3D)
 
 # And @dataandme's Tweet
 
-{{< tweet 955440483932700672 >}}
+{{< tweet dataandme 955440483932700672 >}}
 
 
 Thank you for the shout-out Mara - this app wouldn't exist without the encouragement and work of the R community.
